@@ -239,123 +239,291 @@
       .api-key{width:100%;min-width:0}
     }
 
-
-    /* Stock table area: scrolls inside its own panel so the column header stays directly under the sticky filters. */
-    :root{--stock-table-max-height:520px;}
-    .desktop-table-wrap{
-      max-width:100%;
-      max-height:var(--stock-table-max-height);
-      overflow:auto;
-      position:relative;
-    }
-    .desktop-table-wrap thead th{
-      position:sticky;
-      top:0;
-      z-index:3;
-      background:var(--panel2);
-      box-shadow:0 1px 0 var(--line), 0 8px 18px rgba(16,24,40,.06);
-    }
-    [data-theme="dark"] .desktop-table-wrap thead th{
-      background:#182235;
-      box-shadow:0 1px 0 rgba(148,163,184,.18), 0 8px 18px rgba(2,6,23,.35);
-    }
-    @media (max-width:1180px){
-      .desktop-table-wrap{max-height:none;overflow:auto;}
-      .desktop-table-wrap thead th{top:0;}
-    }
-
-
-    /* Table overflow fix: stop long risk/source text from spilling outside the viewport */
-    .desktop-table-wrap table{min-width:1500px;}
-    .desktop-table-wrap td{vertical-align:top;}
-    .desktop-table-wrap td:nth-child(14),
-    .desktop-table-wrap td:nth-child(15){white-space:normal;}
-    .table-warning{
-      display:block;
-      margin-top:6px;
-      max-width:120px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      color:var(--amber);
-      font-size:12px;
-      line-height:1.25;
-      font-weight:700;
-    }
-
   
 
-    /* FINAL FIX: keep the table column header pinned directly under the sticky filter panel while the page scrolls. */
-    .desktop-table-wrap{
-      max-height:none !important;
-      overflow-x:auto !important;
-      overflow-y:visible !important;
-      position:relative !important;
+    /* CLEAN STICKY REBUILD
+       Do not use fixed positioning. This prevents rows from sliding underneath.
+       The three sections stay in normal document flow and become sticky only when reached. */
+    :root{
+      --nd-topbar-h:64px;
+      --nd-filter-h:150px;
+      --nd-table-head-top:214px;
     }
-    .desktop-table-wrap thead th{
-      position:sticky !important;
-      top:var(--sticky-table-head-top, 210px) !important;
-      z-index:5 !important;
-      background:var(--panel2) !important;
-      box-shadow:0 1px 0 var(--line), 0 10px 20px rgba(16,24,40,.08) !important;
-    }
-    .filter-panel{z-index:6 !important;}
-    .desktop-table-wrap td:nth-child(14),
-    .desktop-table-wrap td:nth-child(15){
-      max-width:190px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .source-cell,
-    .table-source,
-    td.source-col{
-      max-width:190px;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-  
-
-    /* FINAL STABLE TABLE LAYOUT
-       Keep filter panel sticky, then make the stock table its own scroll area.
-       The column header stays at the top of that table area, directly below filters. */
-    .desktop-table-wrap{
-      max-width:100% !important;
-      max-height:calc(100vh - var(--stock-table-panel-top, 250px)) !important;
-      min-height:420px !important;
-      overflow:auto !important;
-      position:relative !important;
-      isolation:isolate;
-    }
-    .desktop-table-wrap table{
-      border-collapse:separate !important;
-      border-spacing:0 !important;
-      min-width:1500px !important;
-    }
-    .desktop-table-wrap thead{
-      display:table-header-group !important;
-    }
-    .desktop-table-wrap thead th{
+    .topbar{
       position:sticky !important;
       top:0 !important;
-      z-index:10 !important;
+      z-index:1000 !important;
+    }
+    .filter-panel{
+      position:sticky !important;
+      top:var(--nd-topbar-h) !important;
+      z-index:900 !important;
+      margin:14px 0 16px !important;
+      background:rgba(255,255,255,.98) !important;
+      backdrop-filter:blur(14px) !important;
+      -webkit-backdrop-filter:blur(14px) !important;
+      box-shadow:0 12px 28px rgba(16,24,40,.08) !important;
+    }
+    [data-theme="dark"] .filter-panel{
+      background:rgba(17,24,39,.98) !important;
+      box-shadow:0 12px 28px rgba(2,6,23,.40) !important;
+    }
+    .desktop-table-wrap{
+      overflow:visible !important;
+      max-height:none !important;
+      position:relative !important;
+      border-radius:18px !important;
+    }
+    .desktop-table-wrap table{
+      min-width:1500px !important;
+      border-collapse:separate !important;
+      border-spacing:0 !important;
+    }
+    .desktop-table-wrap thead th{
+      position:sticky !important;
+      top:var(--nd-table-head-top) !important;
+      z-index:800 !important;
       background:var(--panel2) !important;
-      box-shadow:0 1px 0 var(--line), 0 8px 16px rgba(16,24,40,.06) !important;
+      box-shadow:0 1px 0 var(--line), 0 8px 16px rgba(16,24,40,.08) !important;
     }
     [data-theme="dark"] .desktop-table-wrap thead th{
       background:#182235 !important;
     }
-    .desktop-table-wrap tbody td{
-      background:var(--panel) !important;
+    .desktop-table-wrap td:nth-child(14),
+    .desktop-table-wrap td:nth-child(15){
+      white-space:normal !important;
+      max-width:190px !important;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
     }
-    .desktop-table-wrap tbody tr:hover td{
-      background:var(--panel2) !important;
+    @media(max-width:1180px){
+      .desktop-table-wrap{
+        overflow-x:auto !important;
+        overflow-y:visible !important;
+      }
+      .desktop-table-wrap thead th{
+        top:var(--nd-table-head-top) !important;
+      }
     }
-    .filter-panel{
-      z-index:20 !important;
-    }
+
+  
+
+    /* RESPONSIVE FIX
+       On iPad / small desktop widths, stop forcing the wide table.
+       Use the card layout instead, and keep the filter block compact.
+       This avoids horizontal overflow and header/filter overlap. */
     @media (max-width:1180px){
-      .desktop-table-wrap{min-height:360px !important;}
+      .top-inner{
+        flex-direction:column !important;
+        align-items:flex-start !important;
+        gap:10px !important;
+      }
+      .brand{
+        min-width:0 !important;
+      }
+      .brand-copy,
+      .title-row,
+      .subtitle{
+        min-width:0 !important;
+      }
+      .controls{
+        width:100% !important;
+        display:flex !important;
+        flex-wrap:wrap !important;
+        justify-content:flex-start !important;
+        gap:8px !important;
+        overflow:visible !important;
+      }
+      .api-key{
+        width:calc(50% - 6px) !important;
+        min-width:220px !important;
+        max-width:none !important;
+      }
+      .controls .btn{
+        width:auto !important;
+        min-height:38px !important;
+        white-space:nowrap !important;
+      }
+      .wrap{
+        padding-left:12px !important;
+        padding-right:12px !important;
+      }
+      .filter-panel{
+        top:var(--nd-topbar-h) !important;
+        width:100% !important;
+        max-width:100% !important;
+        border-radius:18px !important;
+        padding:14px !important;
+      }
+      .filterbar{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:8px !important;
+      }
+      .filterbar .input,
+      .filterbar .select,
+      .filterbar .btn{
+        width:100% !important;
+        min-width:0 !important;
+      }
+      .chips{
+        display:flex !important;
+        flex-wrap:nowrap !important;
+        overflow-x:auto !important;
+        padding-bottom:4px !important;
+        -webkit-overflow-scrolling:touch !important;
+      }
+      .chip{
+        flex:0 0 auto !important;
+      }
+      .desktop-table-wrap{
+        display:none !important;
+      }
+      .ipad-card-grid{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:14px !important;
+      }
+      .ipad-hint{
+        display:block !important;
+      }
+    }
+    @media (max-width:760px){
+      .api-key{
+        width:100% !important;
+        min-width:0 !important;
+      }
+      .filterbar{
+        grid-template-columns:1fr !important;
+      }
+      .ipad-card-grid{
+        grid-template-columns:1fr !important;
+      }
+      .stock-card{
+        min-width:0 !important;
+      }
+      .stock-card-head{
+        align-items:flex-start !important;
+      }
+      .stock-card-symbol{
+        font-size:24px !important;
+      }
+      .stock-card-price{
+        font-size:24px !important;
+      }
+    }
+    @media (min-width:1181px){
+      .desktop-table-wrap{
+        display:block !important;
+      }
+      .ipad-card-grid{
+        display:none !important;
+      }
+    }
+
+  
+
+    /* RESPONSIVE HARD FIX:
+       The wide spreadsheet table is not usable on iPad / narrow browser / zoomed desktop.
+       Force card mode under 1500px OR when JS detects a touch device.
+       This removes the broken right-side overflow columns completely. */
+    body.use-card-layout .desktop-table-wrap{
+      display:none !important;
+    }
+    body.use-card-layout .ipad-card-grid{
+      display:grid !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:14px !important;
+    }
+    body.use-card-layout .ipad-hint{
+      display:block !important;
+    }
+    body.use-card-layout .filter-panel{
+      width:auto !important;
+      max-width:none !important;
+      left:auto !important;
+      right:auto !important;
+      transform:none !important;
+      margin:14px 0 16px !important;
+      padding:14px !important;
+      border-radius:18px !important;
+    }
+    body.use-card-layout .filterbar{
+      display:grid !important;
+      grid-template-columns:minmax(220px,1.4fr) minmax(150px,.8fr) minmax(140px,.7fr) auto !important;
+      gap:8px !important;
+      align-items:center !important;
+    }
+    body.use-card-layout .filterbar .input,
+    body.use-card-layout .filterbar .select,
+    body.use-card-layout .filterbar .btn{
+      width:100% !important;
+      min-width:0 !important;
+    }
+    body.use-card-layout .chips{
+      display:flex !important;
+      flex-wrap:nowrap !important;
+      overflow-x:auto !important;
+      padding-bottom:4px !important;
+      -webkit-overflow-scrolling:touch !important;
+    }
+    body.use-card-layout .chip{
+      flex:0 0 auto !important;
+    }
+    body.use-card-layout .top-inner{
+      flex-direction:column !important;
+      align-items:flex-start !important;
+      gap:10px !important;
+    }
+    body.use-card-layout .controls{
+      width:100% !important;
+      display:flex !important;
+      flex-wrap:wrap !important;
+      justify-content:flex-start !important;
+      gap:8px !important;
+      overflow:visible !important;
+    }
+    body.use-card-layout .api-key{
+      width:calc(50% - 6px) !important;
+      min-width:220px !important;
+      max-width:none !important;
+    }
+    body.use-card-layout .controls .btn{
+      width:auto !important;
+      min-height:38px !important;
+      white-space:nowrap !important;
+    }
+
+    @media (max-width:1500px){
+      .desktop-table-wrap{display:none !important;}
+      .ipad-card-grid{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:14px !important;
+      }
+      .ipad-hint{display:block !important;}
+    }
+    @media (max-width:760px){
+      body.use-card-layout .filterbar{
+        grid-template-columns:1fr !important;
+      }
+      body.use-card-layout .api-key{
+        width:100% !important;
+        min-width:0 !important;
+      }
+      body.use-card-layout .ipad-card-grid,
+      .ipad-card-grid{
+        grid-template-columns:1fr !important;
+      }
+      .stock-card{min-width:0 !important;}
+      .stock-card-metrics,
+      .stock-card-scores{
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      }
+    }
+    @media (min-width:1501px){
+      body:not(.use-card-layout) .desktop-table-wrap{display:block !important;}
+      body:not(.use-card-layout) .ipad-card-grid{display:none !important;}
     }
 
   </style>
@@ -545,12 +713,6 @@
     return out;
   }
   function warningHtml(s){ const w=riskWarnings(s); return w.length?`<div class="warning-text">⚠ ${w[0]}</div>`:`<div class="muted" style="font-size:12px">${t('noWarnings')}</div>`; }
-  function tableWarningHtml(s){
-    const w=riskWarnings(s);
-    if(!w.length) return '';
-    const shortLabel = (s.entryRisk||0)>=80 ? t('avoidChasing') : (s.entryRisk||0)>=60 ? t('riskWarning') : t('trendStatus');
-    return `<span class="table-warning" title="${escapeHtml(w[0])}">⚠ ${escapeHtml(shortLabel)}</span>`;
-  }
   function apiHealth(){
     const stocks=Object.values(state.stocks||{});
     const quoteErr=stocks.some(s=>s.status==='error');
@@ -756,7 +918,7 @@
   }
   function rowHtml(s){
     const err=s.error?`<div class="muted" style="max-width:180px;white-space:normal">${escapeHtml(s.error)}</div>`:'';
-    return `<tr><td>${statusBadge(s)}${err}</td><td><span class="ticker" data-view="${s.symbol}">${s.symbol}</span></td><td>${escapeHtml(s.name||'—')}</td><td><span class="badge">${escapeHtml(s.theme||'Other')}</span></td><td>${priorityButtonsHtml(s,true)}</td><td class="num">${money(s.c)}</td><td class="num ${s.dp>0?'pos':s.dp<0?'neg':''}">${pct(s.dp)}</td><td class="num ${s.perf5>0?'pos':s.perf5<0?'neg':''}">${pct(s.perf5)}</td><td class="num ${s.perf30>0?'pos':s.perf30<0?'neg':''}">${pct(s.perf30)}</td><td class="num ${s.perf90>0?'pos':s.perf90<0?'neg':''}">${pct(s.perf90)}</td><td class="num">${scoreBadge(s.trendScore)}</td><td class="num">${scoreBadge(s.stabilityScore)}</td><td class="num">${scoreBadge(s.entryRisk,'risk')}</td><td>${s.actionTag?`<span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag)}</span>`:'—'}${tableWarningHtml(s)}</td><td>${chartBadge(s)}<div class="muted" style="max-width:240px;white-space:normal;margin-top:4px">${s.status==='live'?escapeHtml(s.source||'Finnhub API'):'—'}${s.chartError?' · '+escapeHtml(s.chartError):''}</div></td><td><button class="btn small" data-view="${s.symbol}">${t('view')}</button> <button class="btn small danger" data-remove="${s.symbol}">${t('remove')}</button></td></tr>`;
+    return `<tr><td>${statusBadge(s)}${err}</td><td><span class="ticker" data-view="${s.symbol}">${s.symbol}</span></td><td>${escapeHtml(s.name||'—')}</td><td><span class="badge">${escapeHtml(s.theme||'Other')}</span></td><td>${priorityButtonsHtml(s,true)}</td><td class="num">${money(s.c)}</td><td class="num ${s.dp>0?'pos':s.dp<0?'neg':''}">${pct(s.dp)}</td><td class="num ${s.perf5>0?'pos':s.perf5<0?'neg':''}">${pct(s.perf5)}</td><td class="num ${s.perf30>0?'pos':s.perf30<0?'neg':''}">${pct(s.perf30)}</td><td class="num ${s.perf90>0?'pos':s.perf90<0?'neg':''}">${pct(s.perf90)}</td><td class="num">${scoreBadge(s.trendScore)}</td><td class="num">${scoreBadge(s.stabilityScore)}</td><td class="num">${scoreBadge(s.entryRisk,'risk')}</td><td>${s.actionTag?`<span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag)}</span>`:'—'}${warningHtml(s)}</td><td>${chartBadge(s)}<div class="muted" style="max-width:240px;white-space:normal;margin-top:4px">${s.status==='live'?escapeHtml(s.source||'Finnhub API'):'—'}${s.chartError?' · '+escapeHtml(s.chartError):''}</div></td><td><button class="btn small" data-view="${s.symbol}">${t('view')}</button> <button class="btn small danger" data-remove="${s.symbol}">${t('remove')}</button></td></tr>`;
   }
   function bindRowActions(){
     document.querySelectorAll('[data-view]').forEach(el=>el.onclick=()=>{activeSymbol=el.dataset.view;activePage='detail';render();});
@@ -808,21 +970,24 @@
       <button class="btn primary" id="settingsSave">${t('saveKey')}</button></div><div style="margin-top:16px">${renderStatusStrip()}</div>${errors.length?`<div class="card" style="margin-top:16px"><h3>${t('errors')}</h3><ul class="error-list">${errors.map(e=>`<li><b>${e.symbol}</b>: ${escapeHtml(e.error||e.chartError||'Unknown error')}</li>`).join('')}</ul></div>`:''}`;
     $('settingsSave').onclick=()=>{localStorage.setItem(KEY_STORAGE,$('settingsKey').value.trim());localStorage.setItem(CHART_KEY_STORAGE,$('settingsChartKey').value.trim());$('apiKey').value=$('settingsKey').value.trim(); if($('chartApiKey')) $('chartApiKey').value=$('settingsChartKey').value.trim(); render();};
   }
-  function updateStickyTableHeader(){
-    const panel=document.querySelector('.filter-panel');
-    const wrap=document.querySelector('.desktop-table-wrap');
-    if(!panel||!wrap) return;
-    const rect=panel.getBoundingClientRect();
-    const panelBottom=Math.max(0, Math.ceil(rect.bottom));
-    // Table is now its own scroll area. This keeps the visible table height
-    // calculated from the bottom of the sticky filter panel. The table header
-    // itself stays sticky at top:0 inside the table panel, so it cannot float
-    // into the data rows or disappear above the panel.
-    document.documentElement.style.setProperty('--stock-table-panel-top', (panelBottom + 24) + 'px');
+  
+  function updateResponsiveMode(){
+    const forceCard = window.innerWidth <= 1500 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    document.body.classList.toggle('use-card-layout', !!forceCard);
   }
-  function render(){setTopTexts();renderNotice();renderTabs(); if(activePage==='detail')renderDetail(); else if(activePage==='ranking')renderRanking(); else if(activePage==='weekly')renderWeekly(); else if(activePage==='settings')renderSettings(); else renderWatchlist(); requestAnimationFrame(updateStickyTableHeader);}
-  window.addEventListener('scroll',updateStickyTableHeader,{passive:true});
-  window.addEventListener('resize',updateStickyTableHeader);
+
+  function updateStickyTableHeader(){
+    updateResponsiveMode();
+    const root=document.documentElement;
+    const topbar=document.querySelector('.topbar');
+    const panel=document.querySelector('.filter-panel');
+    const topbarH=topbar?Math.ceil(topbar.getBoundingClientRect().height):64;
+    const panelH=panel?Math.ceil(panel.getBoundingClientRect().height):150;
+    root.style.setProperty('--nd-topbar-h', topbarH + 'px');
+    root.style.setProperty('--nd-filter-h', panelH + 'px');
+    root.style.setProperty('--nd-table-head-top', (topbarH + panelH) + 'px');
+  }
+  function render(){setTopTexts();renderNotice();renderTabs(); if(activePage==='detail')renderDetail(); else if(activePage==='ranking')renderRanking(); else if(activePage==='weekly')renderWeekly(); else if(activePage==='settings')renderSettings(); else renderWatchlist(); updateResponsiveMode(); requestAnimationFrame(updateStickyTableHeader); setTimeout(updateStickyTableHeader,120); setTimeout(updateStickyTableHeader,120); setTimeout(updateStickyTableHeader,80);}
 
   async function refreshLiveData(){
     if(isRefreshing) return;
@@ -992,20 +1157,22 @@
   function toggleAutoRefresh(){
     state.autoRefresh=!state.autoRefresh;
     saveState();
-    startAutoRefresh();
+    window.addEventListener('resize',updateStickyTableHeader);
+  window.addEventListener('scroll',updateStickyTableHeader,{passive:true});
+  updateResponsiveMode();
+  startAutoRefresh();
     render();
     if(state.autoRefresh && currentKey() && !isRefreshing) refreshLiveData();
   }
 
   $('apiKey').value=currentKey(); if($('chartApiKey')) $('chartApiKey').value=currentChartKey(); $('saveKeyBtn').onclick=()=>{localStorage.setItem(KEY_STORAGE,$('apiKey').value.trim()); if($('chartApiKey')) localStorage.setItem(CHART_KEY_STORAGE,$('chartApiKey').value.trim()); render(); if(state.autoRefresh && currentKey() && !isRefreshing) refreshLiveData();}; $('refreshBtn').onclick=refreshLiveData; if($('refreshChartsBtn')) $('refreshChartsBtn').onclick=()=>refreshChartData(); $('autoRefreshBtn').onclick=toggleAutoRefresh; $('langBtn').onclick=()=>{state.lang=state.lang==='en'?'zh':'en';saveState();render();};
   $('closeModal').onclick=closeModal; $('cancelModal').onclick=closeModal; $('addTickerConfirm').onclick=addTicker; $('newSymbol').addEventListener('keydown',e=>{if(e.key==='Enter')addTicker();}); $('tickerModal').addEventListener('click',e=>{if(e.target.id==='tickerModal')closeModal();});
-  window.addEventListener('scroll', updateStickyTableHeader, {passive:true});
-  window.addEventListener('resize', updateStickyTableHeader);
+  window.addEventListener('resize',updateStickyTableHeader);
+  window.addEventListener('scroll',updateStickyTableHeader,{passive:true});
   startAutoRefresh();
   render();
   setInterval(updateMarketClocks,1000);
   updateMarketClocks();
-  requestAnimationFrame(updateStickyTableHeader);
 })();
 </script>
 </body>
