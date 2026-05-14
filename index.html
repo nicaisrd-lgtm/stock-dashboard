@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Stock Dashboard" />
-  <title>Live Stock Dashboard · iPad</title>
+  <meta name="apple-mobile-web-app-title" content="NiikeDash Live" />
+  <title>NiikeDash Live · Real-Time Stock Watch Dashboard</title>
   <style>
     :root{
       --bg:#f6f8fb;--panel:#fff;--panel2:#f8fafc;--text:#101828;--muted:#667085;--line:#e4e7ec;--blue:#2563eb;--green:#079455;--red:#d92d20;--amber:#dc6803;--purple:#7a5af8;--shadow:0 10px 28px rgba(16,24,40,.08);
@@ -160,7 +160,22 @@
     .stock-card-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:11px}
     .ipad-hint{display:none;color:var(--muted);font-size:12px;margin:8px 0 0}
 
+
+
+    .status-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0 16px}
+    .status-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+    .status-card .label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+    .status-card .value{margin-top:5px;font-weight:900;font-size:14px}
+    .warning-text{font-size:12px;line-height:1.35;color:var(--amber);margin-top:6px;max-width:240px;white-space:normal}
+    .priority-select{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:6px 8px;font-size:11px;font-weight:800;max-width:118px}
+    .note-box{width:100%;min-height:84px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:10px;font-family:inherit;font-size:13px;resize:vertical}
+
+    .market-clocks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .time-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:800;white-space:nowrap}
+    .time-chip .label{color:var(--muted);font-weight:800}
+    .time-chip .time{font-variant-numeric:tabular-nums;letter-spacing:.2px}
     @media (min-width:768px) and (max-width:1180px){
+      .status-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
       .topbar{position:sticky;top:0}.top-inner{max-width:100%;padding:14px 18px;align-items:flex-start;flex-direction:column}.brand h1{font-size:20px}.subtitle{font-size:12px}
       .controls{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}.api-key{width:100%;grid-column:span 2}.controls .btn{width:100%;min-height:42px}.controls #langBtn{grid-column:span 1}
       .wrap{max-width:100%;padding:18px 16px 48px}.tabs{gap:10px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.tab{padding:12px 16px;min-width:max-content}
@@ -175,7 +190,40 @@
     }
 
     @media(max-width:960px){.cards{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.top-inner{align-items:flex-start;flex-direction:column}.api-key{width:100%}.controls{width:100%}.input{min-width:0;width:100%}.bucket{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
-    @media(max-width:560px){.cards{grid-template-columns:1fr}.metric{font-size:22px}h1{font-size:16px}.wrap{padding:14px 12px}.card{padding:14px}.chartbox{height:270px}}
+    @media(max-width:560px){.status-strip{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.metric{font-size:22px}h1{font-size:16px}.wrap{padding:14px 12px}.card{padding:14px}.chartbox{height:270px}}
+
+    /* Compact header override: keeps brand + menu on one row in fullscreen/tablet */
+    .top-inner{padding:10px 14px;gap:10px;flex-direction:row;align-items:center;justify-content:space-between;max-width:1480px}
+    .brand{gap:9px;min-width:0;flex:0 0 auto}
+    .logo{width:30px;height:30px;border-radius:10px;box-shadow:none;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,#2563eb,#6d5dfc)}
+    .logo svg{width:21px;height:21px;display:block}
+    .logo path,.logo line,.logo circle{stroke:#fff;stroke-width:2.15;stroke-linecap:round;stroke-linejoin:round;fill:none}
+    .title-row{display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap}
+    h1{font-size:16px;line-height:1.05;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+    .live-status{display:inline-flex;align-items:center;gap:5px;color:#12b76a;font-weight:900;font-size:12px;letter-spacing:.02em;line-height:1;white-space:nowrap}
+    .live-dot{width:8px;height:8px;border-radius:50%;background:#12b76a;box-shadow:0 0 0 3px rgba(18,183,106,.12)}
+    .subtitle{font-size:11px;margin-top:2px;line-height:1.05;white-space:nowrap}
+    .controls{flex:1 1 auto;justify-content:flex-end;gap:6px;flex-wrap:nowrap;min-width:0;overflow-x:auto;scrollbar-width:none}
+    .controls::-webkit-scrollbar{display:none}
+    .btn,.input,.select{padding:8px 10px;border-radius:9px;font-size:12px}
+    .api-key{width:210px;min-width:160px}
+
+    @media (min-width:768px) and (max-width:1180px){
+      .top-inner{max-width:100%;padding:10px 12px;align-items:center;flex-direction:row}
+      .brand h1{font-size:16px}
+      .subtitle{font-size:11px}
+      .controls{width:auto;display:flex;grid-template-columns:none;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-end;gap:6px}
+      .api-key{width:170px;min-width:150px;grid-column:auto}
+      .controls .btn{width:auto;min-height:36px;white-space:nowrap}
+      .controls #langBtn{grid-column:auto}
+      .filter-panel{top:62px}
+    }
+    @media (max-width:760px){
+      .top-inner{flex-direction:column;align-items:flex-start}
+      .controls{width:100%;justify-content:flex-start;flex-wrap:wrap;overflow-x:visible}
+      .api-key{width:100%;min-width:0}
+    }
+
   </style>
 </head>
 <body>
@@ -183,8 +231,19 @@
   <header class="topbar">
     <div class="top-inner">
       <div class="brand">
-        <div class="logo"></div>
-        <div><h1 id="appTitle">Live Stock Dashboard</h1><div class="subtitle" id="appSubtitle">iPad Optimised · Live API Only · No Mock Data</div></div>
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img" focusable="false">
+            <path d="M6 19.5 C10 10.5, 15 11, 18.2 16.2 S24.5 19, 27 11.5" />
+            <line x1="8" y1="23" x2="8" y2="27" />
+            <line x1="16" y1="21" x2="16" y2="27" />
+            <line x1="24" y1="22" x2="24" y2="27" />
+            <circle cx="26.8" cy="8.2" r="1.15" fill="#fff" stroke="none" />
+          </svg>
+        </div>
+        <div class="brand-copy">
+          <div class="title-row"><h1 id="appTitle">NiikeDash</h1><span class="live-status"><span class="live-dot"></span>LIVE</span></div>
+          <div class="subtitle" id="appSubtitle">Real-Time Stock Watch Dashboard</div>
+        </div>
       </div>
       <div class="controls">
         <input class="input api-key" id="apiKey" type="password" placeholder="Finnhub API Key" autocomplete="off" />
@@ -210,6 +269,7 @@
     <div class="two">
       <div class="field"><label id="symbolLabel">Ticker Symbol</label><input class="input" id="newSymbol" placeholder="e.g. NVDA" /></div>
       <div class="field"><label id="themeLabel">Theme</label><select class="select" id="newTheme"><option>AI Chip</option><option>AI Cloud</option><option>AI Platform</option><option>Stable Big Tech</option><option>High Volatility</option><option>Healthcare Growth</option><option>Other</option></select></div>
+      <div class="field"><label id="priorityLabel">Priority</label><select class="select" id="newPriority"><option>Core</option><option selected>Watch</option><option>Speculative</option></select></div>
     </div>
     <div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn" id="cancelModal">Cancel</button><button class="btn primary" id="addTickerConfirm">Add</button></div>
   </div>
@@ -229,7 +289,7 @@
   const THEMES=['All','AI Chip','AI Cloud','AI Platform','Stable Big Tech','High Volatility','Healthcare Growth','Other'];
   const i18n={
     en:{
-      title:'Live Stock Dashboard', subtitle:'iPad Optimised · Live API Only · No Mock Data', saveKey:'Save Keys', refresh:'Refresh Prices', refreshCharts:'Refresh Trend Data', refreshingCharts:'Loading trends...', autoOn:'Auto 30s Price: ON', autoOff:'Auto 30s Price: OFF', keyPlaceholder:'Finnhub API Key', chartKeyPlaceholder:'Twelve Data K线 Key', chartKeyPlaceholder:'Twelve Data Key for chart',
+      title:'NiikeDash', subtitle:'Real-Time Stock Watch Dashboard', saveKey:'Save Keys', refresh:'Refresh Prices', refreshCharts:'Refresh Trend Data', refreshingCharts:'Loading trends...', autoOn:'Auto 30s Price: ON', autoOff:'Auto 30s Price: OFF', keyPlaceholder:'Finnhub API Key', chartKeyPlaceholder:'Twelve Data K线 Key', chartKeyPlaceholder:'Twelve Data Key for chart',
       noticeNoKey:'Enter a Finnhub API Key for live quotes. Add a Twelve Data API Key if Finnhub does not return chart candles. This version never uses mock or fallback data.', noticeLoaded:'Live prices loaded from Finnhub. Trend data refreshes separately and is cached.', noticeError:'Live API error. No fallback data is used.',
       disclaimer:'For personal market observation and education only. This is not financial advice or a trading instruction. Live data may be delayed depending on your API plan.',
       watchlist:'Watchlist', detail:'Stock Detail', ranking:'Category Ranking', weekly:'Weekly Action Plan', settings:'Settings',
@@ -242,10 +302,10 @@
       stableCandidate:'Stable Candidate', moderate:'Moderate', mediumRisk:'Medium Risk', highVolatility:'High Volatility', speculative:'Speculative',
       lowerRisk:'Lower Entry Risk', moderateRisk:'Moderate Entry Risk', elevatedRisk:'Elevated Entry Risk', avoidChasing:'Avoid Chasing', watch:'Watch', waitPullback:'Wait for Pullback', holdWatch:'Hold / Watch', smallOnly:'Small Position Only', watchEntry:'Watch for Entry', earningsWatch:'Earnings Watch',
       bucketCore:'Core Hold / Watch', bucketEntry:'Watch for Entry', bucketPullback:'Wait for Pullback', bucketRisk:'High Risk / Small Only', bucketError:'Data Error / Needs Refresh',
-      noLiveYet:'No live data yet. Enter your API key, then click Refresh Prices. Click Refresh Trend Data separately for 5D / 1M / 3M and charts.', errors:'Errors', apiEndpoint:'API Providers: Finnhub quote for live prices; Finnhub/Twelve Data for low-frequency trend charts', noMock:'Strict mode: mock data and offline fallback are disabled.'
+      noLiveYet:'No live data yet. Enter your API key, then click Refresh Prices. Click Refresh Trend Data separately for 5D / 1M / 3M and charts.', errors:'Errors', apiEndpoint:'API Providers: Finnhub quote for live prices; Finnhub/Twelve Data for low-frequency trend charts', noMock:'Strict mode: mock data and offline fallback are disabled.', marketStatus:'US Market', marketOpen:'Open', marketPre:'Pre-market', marketAfter:'After-hours', marketClosed:'Closed', pricesUpdated:'Prices updated', trendsUpdated:'Trend data updated', apiHealth:'API Health', finnhubHealth:'Finnhub', twelveHealth:'Twelve Data', connected:'Connected', notConnected:'Not connected', rateLimited:'Rate limited / error', trendStatus:'Trend Status', trendLive:'Trend live', trendCached:'Trend cached', trendNotLoaded:'Trend not loaded', cacheAgo:'ago', priority:'Priority', core:'Core', speculative:'Speculative', riskWarning:'Risk Warning', notes:'Notes', saveNotes:'Save Notes', noWarnings:'No major warning', warningDaily:'Daily gain is high: possible chasing risk.', warningEntry:'Entry risk is high: avoid chasing.', warningRebound:'5D is strong but 1M is weak: may be a short-term rebound only.', warningMomentumRisk:'Strong trend with low stability: high momentum, high risk.', warningChartMissing:'Trend data is missing or API-limited.'
     },
     zh:{
-      title:'实时股票观察仪表盘', subtitle:'仅实时 API · 无模拟数据 · 无离线备用数据', saveKey:'保存 Keys', refresh:'刷新价格', refreshCharts:'刷新趋势数据', refreshingCharts:'正在加载趋势...', autoOn:'自动30秒价格：开', autoOff:'自动30秒价格：关', keyPlaceholder:'Finnhub API Key', chartKeyPlaceholder:'Twelve Data K线 Key', chartKeyPlaceholder:'Twelve Data Key for chart',
+      title:'NiikeDash', subtitle:'Real-Time Stock Watch Dashboard', saveKey:'保存 Keys', refresh:'刷新价格', refreshCharts:'刷新趋势数据', refreshingCharts:'正在加载趋势...', autoOn:'自动30秒价格：开', autoOff:'自动30秒价格：关', keyPlaceholder:'Finnhub API Key', chartKeyPlaceholder:'Twelve Data K线 Key', chartKeyPlaceholder:'Twelve Data Key for chart',
       noticeNoKey:'输入 Finnhub API Key 用于实时报价。如 Finnhub 不返回K线，请在设置里添加 Twelve Data API Key 作为第二个实时K线数据源。本版本绝不使用 mock 或备用数据。', noticeLoaded:'已从 Finnhub 加载实时价格。趋势数据单独低频刷新并缓存。', noticeError:'实时 API 出错。本版本不会使用备用数据。',
       disclaimer:'仅供个人市场观察与学习使用，不构成财务建议或交易指令。实时数据是否延迟取决于你的 API 套餐。',
       watchlist:'观察列表', detail:'股票详情', ranking:'分类排名', weekly:'每周观察计划', settings:'设置',
@@ -258,7 +318,7 @@
       stableCandidate:'稳定候选', moderate:'中等', mediumRisk:'中等风险', highVolatility:'高波动', speculative:'投机型',
       lowerRisk:'较低入场风险', moderateRisk:'中等入场风险', elevatedRisk:'入场风险偏高', avoidChasing:'避免追高', watch:'观察', waitPullback:'等回调', holdWatch:'持有观察', smallOnly:'仅小仓位', watchEntry:'观察入场', earningsWatch:'财报观察',
       bucketCore:'核心持有 / 观察', bucketEntry:'观察入场', bucketPullback:'等回调', bucketRisk:'高风险 / 小仓位', bucketError:'数据错误 / 需要刷新',
-      noLiveYet:'尚无实时数据。输入 API Key 后点击刷新价格；5日 / 1月 / 3月和趋势图请单独点击刷新趋势数据。', errors:'错误', apiEndpoint:'API 提供商：Finnhub 实时报价；Finnhub/Twelve Data 低频趋势图数据', noMock:'严格模式：模拟数据和离线备用数据已禁用。'
+      noLiveYet:'尚无实时数据。输入 API Key 后点击刷新价格；5日 / 1月 / 3月和趋势图请单独点击刷新趋势数据。', errors:'错误', apiEndpoint:'API 提供商：Finnhub 实时报价；Finnhub/Twelve Data 低频趋势图数据', noMock:'严格模式：模拟数据和离线备用数据已禁用。', marketStatus:'美股状态', marketOpen:'开盘中', marketPre:'盘前', marketAfter:'盘后', marketClosed:'已收盘', pricesUpdated:'价格更新时间', trendsUpdated:'趋势更新时间', apiHealth:'API 状态', finnhubHealth:'Finnhub', twelveHealth:'Twelve Data', connected:'已连接', notConnected:'未连接', rateLimited:'限流 / 错误', trendStatus:'趋势状态', trendLive:'趋势实时', trendCached:'趋势缓存', trendNotLoaded:'趋势未加载', cacheAgo:'前', priority:'关注等级', core:'核心', speculative:'高波动', riskWarning:'风险提醒', notes:'个人备注', saveNotes:'保存备注', noWarnings:'暂无主要风险提醒', warningDaily:'单日涨幅较高：可能存在追高风险。', warningEntry:'入场风险较高：避免追高。', warningRebound:'5日强但1月弱：可能只是短线反弹。', warningMomentumRisk:'趋势强但稳定性低：动能强，风险也高。', warningChartMissing:'趋势数据缺失或 API 受限。'
     }
   };
   let state=loadState();
@@ -274,9 +334,10 @@
   let isRefreshingCharts=false;
   let autoRefreshTimer=null;
 
+  function defaultPriority(sym){ return ['NVDA','AAPL','MSFT'].includes(sym)?'Core':['TSLA','NBIS','PLTR'].includes(sym)?'Speculative':'Watch'; }
   function loadState(){
     const saved=tryJson(localStorage.getItem(STORAGE_KEY));
-    const merged=Object.assign({lang:'en',theme:'light',watchlist:DEFAULT_WATCHLIST,stocks:{},lastRefresh:null,lastChartRefresh:null,globalError:null,autoRefresh:false},saved||{}); merged.theme='light'; return merged;
+    const merged=Object.assign({lang:'en',theme:'light',watchlist:DEFAULT_WATCHLIST,stocks:{},lastRefresh:null,lastChartRefresh:null,globalError:null,autoRefresh:false},saved||{}); merged.watchlist=(merged.watchlist||DEFAULT_WATCHLIST).map(w=>Object.assign({priority:defaultPriority(w.symbol),notes:''},w)); merged.theme='light'; return merged;
   }
   function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
   function tryJson(s){try{return s?JSON.parse(s):null}catch(e){return null}}
@@ -297,13 +358,86 @@
     let cls=''; if(type==='risk'){cls=score>=75?'red':score>=55?'amber':'green'} else {cls=score>=75?'green':score>=55?'':score>=35?'amber':'red'}
     return `<span class="badge ${cls}">${Math.round(score)}</span>`;
   }
+
+  function formatZoneTime(timeZone){
+    const locale=state.lang==='zh'?'zh-CN':'en-AU';
+    return new Intl.DateTimeFormat(locale,{timeZone,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+  }
+  function updateMarketClocks(){
+    const ny=$('nyClock'), syd=$('sydClock');
+    if(!ny&&!syd) return;
+    const isZh=state.lang==='zh';
+    if($('nyClockLabel')) $('nyClockLabel').textContent=isZh?'纽约时间':'NY Time';
+    if($('sydClockLabel')) $('sydClockLabel').textContent=isZh?'悉尼时间':'Sydney Time';
+    try{ if(ny) ny.textContent=formatZoneTime('America/New_York'); }catch(e){ if(ny) ny.textContent='--:--:--'; }
+    try{ if(syd) syd.textContent=formatZoneTime('Australia/Sydney'); }catch(e){ if(syd) syd.textContent='--:--:--'; }
+  }
+
+  function nyParts(){
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+    const get=t=>parts.find(p=>p.type===t)?.value;
+    let hour=Number(get('hour')); if(hour===24) hour=0;
+    return {weekday:get('weekday'),hour,minute:Number(get('minute'))};
+  }
+  function getMarketStatus(){
+    try{
+      const p=nyParts(); const mins=p.hour*60+p.minute; const weekend=p.weekday==='Sat'||p.weekday==='Sun';
+      if(weekend) return {key:'closed',label:t('marketClosed'),cls:'red'};
+      if(mins>=4*60 && mins<9*60+30) return {key:'pre',label:t('marketPre'),cls:'amber'};
+      if(mins>=9*60+30 && mins<16*60) return {key:'open',label:t('marketOpen'),cls:'green'};
+      if(mins>=16*60 && mins<20*60) return {key:'after',label:t('marketAfter'),cls:'amber'};
+      return {key:'closed',label:t('marketClosed'),cls:'red'};
+    }catch(e){return {key:'closed',label:t('marketClosed'),cls:'red'}}
+  }
+  function minutesAgo(iso){
+    if(!iso) return null; const m=Math.max(0,Math.round((Date.now()-new Date(iso).getTime())/60000));
+    return m<1?'now':(m+'m');
+  }
+  function chartBadge(s){
+    if(s.chartStatus==='live') return `<span class="badge green">${t('trendLive')}</span>`;
+    if(s.candles&&s.candles.length&&s.chartUpdatedAt) return `<span class="badge amber">${t('trendCached')} ${minutesAgo(s.chartUpdatedAt)} ${t('cacheAgo')}</span>`;
+    if(s.chartStatus==='error'||s.chartError) return `<span class="badge red">${t('trendNotLoaded')}</span>`;
+    return `<span class="badge amber">${t('trendNotLoaded')}</span>`;
+  }
+  function priorityLabel(p){ if(p==='Core') return t('core'); if(p==='Speculative') return t('speculative'); return t('watch'); }
+  function priorityBadge(s){ const p=s.priority||'Watch'; return `<span class="badge ${p==='Core'?'green':p==='Speculative'?'red':'purple'}">${priorityLabel(p)}</span>`; }
+  function riskWarnings(s){
+    const out=[];
+    if((s.dp||0)>5) out.push(t('warningDaily'));
+    if((s.entryRisk||0)>=80) out.push(t('warningEntry'));
+    if((s.perf5||0)>5 && (s.perf30||0)<0) out.push(t('warningRebound'));
+    if((s.trendScore||0)>=70 && (s.stabilityScore||0)<45) out.push(t('warningMomentumRisk'));
+    if(s.status==='live' && !(s.candles&&s.candles.length)) out.push(t('warningChartMissing'));
+    return out;
+  }
+  function warningHtml(s){ const w=riskWarnings(s); return w.length?`<div class="warning-text">⚠ ${w[0]}</div>`:`<div class="muted" style="font-size:12px">${t('noWarnings')}</div>`; }
+  function apiHealth(){
+    const stocks=Object.values(state.stocks||{});
+    const quoteErr=stocks.some(s=>s.status==='error');
+    const chartErr=stocks.some(s=>s.chartError);
+    const chartLive=stocks.some(s=>s.chartStatus==='live' || (s.candles&&s.candles.length));
+    return {
+      finnhub: currentKey() ? (quoteErr?t('rateLimited'):t('connected')) : t('notConnected'),
+      twelve: currentChartKey() ? (chartErr&&!chartLive?t('rateLimited'):t('connected')) : t('notConnected')
+    };
+  }
+  function renderStatusStrip(){
+    const ms=getMarketStatus(); const h=apiHealth();
+    return `<div class="status-strip">
+      <div class="status-card"><div class="label">${t('marketStatus')}</div><div class="value"><span class="badge ${ms.cls}">${ms.label}</span></div></div>
+      <div class="status-card"><div class="label">${t('pricesUpdated')}</div><div class="value">${state.lastRefresh?formatZoneTime('America/New_York')+' NY · '+minutesAgo(state.lastRefresh)+' '+t('cacheAgo'):'—'}</div></div>
+      <div class="status-card"><div class="label">${t('trendsUpdated')}</div><div class="value">${state.lastChartRefresh?minutesAgo(state.lastChartRefresh)+' '+t('cacheAgo'):'—'}</div></div>
+      <div class="status-card"><div class="label">${t('apiHealth')}</div><div class="value"><span class="badge ${h.finnhub===t('connected')?'green':h.finnhub===t('notConnected')?'amber':'red'}">${t('finnhubHealth')}: ${h.finnhub}</span> <span class="badge ${h.twelve===t('connected')?'green':h.twelve===t('notConnected')?'amber':'red'}">${t('twelveHealth')}: ${h.twelve}</span></div></div>
+    </div>`;
+  }
+
   function currentKey(){return localStorage.getItem(KEY_STORAGE)||''}
   function currentChartKey(){return localStorage.getItem(CHART_KEY_STORAGE)||''}
   function setTopTexts(){
     state.theme='light'; $('app').setAttribute('data-theme','light'); $('appTitle').textContent=t('title'); $('appSubtitle').textContent=t('subtitle');
     $('saveKeyBtn').textContent=t('saveKey'); $('refreshBtn').innerHTML=isRefreshing?`<span class="loader"></span> ${t('loading')}`:t('refresh'); if($('refreshChartsBtn')) $('refreshChartsBtn').innerHTML=isRefreshingCharts?`<span class="loader"></span> ${t('refreshingCharts')}`:t('refreshCharts'); $('autoRefreshBtn').textContent=state.autoRefresh?t('autoOn'):t('autoOff'); $('autoRefreshBtn').classList.toggle('active',!!state.autoRefresh); $('langBtn').textContent=state.lang==='en'?'中文':'EN'; $('apiKey').placeholder=t('keyPlaceholder'); if($('chartApiKey')) $('chartApiKey').placeholder=t('chartKeyPlaceholder');
     $('footerText').innerHTML=`<b>${t('liveOnly')}</b> · ${t('apiEndpoint')} · ${t('noMock')}<br>${t('disclaimer')}`;
-    $('modalTitle').textContent=t('modalTitle'); $('symbolLabel').textContent=t('symbolLabel'); $('themeLabel').textContent=t('themeLabel'); $('cancelModal').textContent=t('cancel'); $('addTickerConfirm').textContent=t('add');
+    $('modalTitle').textContent=t('modalTitle'); $('symbolLabel').textContent=t('symbolLabel'); $('themeLabel').textContent=t('themeLabel'); if($('priorityLabel')) $('priorityLabel').textContent=t('priority'); $('cancelModal').textContent=t('cancel'); $('addTickerConfirm').textContent=t('add');
   }
   function renderNotice(){
     const hasKey=!!currentKey(); const stocks=Object.values(state.stocks||{}); const errors=stocks.filter(s=>s.status==='error'); const lives=stocks.filter(s=>s.status==='live');
@@ -392,7 +526,7 @@
   function renderSummaryCards(){
     const stocks=hydrateStocks(); const live=stocks.filter(s=>s.status==='live'); const err=stocks.filter(s=>s.status==='error');
     const avgTrend=live.length?live.reduce((a,s)=>a+(s.trendScore||0),0)/live.length:null; const highRisk=live.filter(s=>(s.entryRisk||0)>=75).length;
-    return `<div class="grid cards">
+    return `${renderStatusStrip()}<div class="grid cards">
       <div class="card"><div class="metric-label">${t('live')}</div><div class="metric">${live.length}/${stocks.length}</div></div>
       <div class="card"><div class="metric-label">${t('errors')}</div><div class="metric">${err.length}</div></div>
       <div class="card"><div class="metric-label">${t('trendScore')}</div><div class="metric">${avgTrend==null?'—':Math.round(avgTrend)}</div></div>
@@ -412,7 +546,7 @@
     const chips=[['All',t('quickAll')],['strongToday',t('strongToday')],['waitPullback',t('waitPullback')],['avoidChasing',t('avoidChasing')],['stableCandidate',t('stableCandidate')],['highVolatility',t('highVolatility')],['aiRelated',t('aiRelated')]];
     $('page').innerHTML=`${renderSummaryCards()}
       <div class="toolbar"><div class="row">
-        <button class="btn primary" id="addTickerBtn">+ ${t('addTicker')}</button><button class="btn" id="exportBtn">${t('exportCSV')}</button>
+        <button class="btn primary" id="addTickerBtn">+ ${t('addTicker')}</button><button class="btn" id="exportBtn">${t('exportCSV')}</button><div class="market-clocks"><span class="time-chip"><span class="label" id="nyClockLabel">NY</span><span class="time" id="nyClock">--:--:--</span></span><span class="time-chip"><span class="label" id="sydClockLabel">Sydney</span><span class="time" id="sydClock">--:--:--</span></span></div>
       </div><div class="muted">${t('updated')}: ${state.lastRefresh?new Date(state.lastRefresh).toLocaleString():'—'} · Chart: ${state.lastChartRefresh?new Date(state.lastChartRefresh).toLocaleString():'—'}</div></div>
       <div class="filter-panel card">
         <div class="filterbar">
@@ -425,7 +559,7 @@
         </div>
         <div class="chips">${chips.map(([v,l])=>`<button class="chip ${quickFilter===v?'active':''}" data-chip="${v}">${l}</button>`).join('')}</div>
       </div>
-      <div class="ipad-hint">iPad layout · ${t('ticker')} cards. Tap a ticker or View to open the detail chart.</div><div class="ipad-card-grid">${arr.length?arr.map(ipadCardHtml).join(''):`<div class="empty card">${t('noData')}</div>`}</div><div class="table-wrap desktop-table-wrap"><table><thead><tr><th>${t('status')}</th><th class="sortable" data-sortkey="symbol">${t('ticker')}<span class="sortmark">${parseSort().key==='symbol'?'↑':'↕'}</span></th><th>${t('company')}</th><th>${t('theme')}</th><th class="num">${t('price')}</th>${sortHeader(t('change'),'change')}${sortHeader(t('fiveD'),'perf5')}${sortHeader(t('oneM'),'perf30')}${sortHeader(t('threeM'),'perf90')}${sortHeader(t('trendScore'),'trend')}${sortHeader(t('stabilityScore'),'stability')}${sortHeader(t('entryRisk'),'risk')}<th>${t('action')}</th><th>${t('source')}</th><th>${t('operations')}</th></tr></thead><tbody>${arr.length?arr.map(rowHtml).join(''):`<tr><td colspan="15" class="empty">${t('noData')}</td></tr>`}</tbody></table></div>`;
+      <div class="ipad-hint">iPad layout · ${t('ticker')} cards. Tap a ticker or View to open the detail chart.</div><div class="ipad-card-grid">${arr.length?arr.map(ipadCardHtml).join(''):`<div class="empty card">${t('noData')}</div>`}</div><div class="table-wrap desktop-table-wrap"><table><thead><tr><th>${t('status')}</th><th class="sortable" data-sortkey="symbol">${t('ticker')}<span class="sortmark">${parseSort().key==='symbol'?'↑':'↕'}</span></th><th>${t('company')}</th><th>${t('theme')}</th><th>${t('priority')}</th><th class="num">${t('price')}</th>${sortHeader(t('change'),'change')}${sortHeader(t('fiveD'),'perf5')}${sortHeader(t('oneM'),'perf30')}${sortHeader(t('threeM'),'perf90')}${sortHeader(t('trendScore'),'trend')}${sortHeader(t('stabilityScore'),'stability')}${sortHeader(t('entryRisk'),'risk')}<th>${t('action')}</th><th>${t('source')}</th><th>${t('operations')}</th></tr></thead><tbody>${arr.length?arr.map(rowHtml).join(''):`<tr><td colspan="16" class="empty">${t('noData')}</td></tr>`}</tbody></table></div>`;
     $('addTickerBtn').onclick=openModal; $('exportBtn').onclick=exportCSV;
     $('searchBox').oninput=e=>{search=e.target.value;renderWatchlistOnly()};
     $('themeFilter').onchange=e=>{activeTheme=e.target.value;renderWatchlistOnly()};
@@ -436,6 +570,8 @@
     document.querySelectorAll('[data-chip]').forEach(el=>el.onclick=()=>{quickFilter=el.dataset.chip;renderWatchlistOnly();});
     document.querySelectorAll('[data-sortkey]').forEach(el=>el.onclick=()=>{const key=el.dataset.sortkey; const ps=parseSort(); let dir='desc'; if(ps.key===key&&ps.dir==='desc') dir='asc'; sort=key+'_'+dir; renderWatchlistOnly();});
     bindRowActions();
+    document.querySelectorAll('[data-priority]').forEach(el=>el.onchange=()=>{const w=state.watchlist.find(x=>x.symbol===el.dataset.priority); if(w){w.priority=el.value; saveState(); renderWatchlistOnly();}});
+    updateMarketClocks();
   }
   function renderWatchlistOnly(){ if(activePage==='watchlist') render(); }
   function ipadCardHtml(s){
@@ -446,8 +582,8 @@
         <div><div class="stock-card-symbol" data-view="${s.symbol}">${s.symbol}</div><div class="stock-card-company">${escapeHtml(s.name||'—')}</div></div>
         <div><div class="stock-card-price">${money(s.c)}</div><div class="${s.dp>0?'pos':s.dp<0?'neg':'muted'}" style="text-align:right;font-weight:900">${pct(s.dp)} · ${money(s.d)}</div></div>
       </div>
-      <div class="row" style="justify-content:space-between"><span class="badge stock-card-theme">${escapeHtml(s.theme||'Other')}</span>${statusBadge(s)}</div>
-      ${err}
+      <div class="row" style="justify-content:space-between"><span class="badge stock-card-theme">${escapeHtml(s.theme||'Other')}</span>${priorityBadge(s)}${statusBadge(s)}</div>
+      ${err}${warningHtml(s)}
       <div class="stock-card-metrics">
         <div class="stock-card-metric"><div class="metric-label">${t('fiveD')}</div><b class="${s.perf5>0?'pos':s.perf5<0?'neg':'muted'}">${pct(s.perf5)}</b></div>
         <div class="stock-card-metric"><div class="metric-label">${t('oneM')}</div><b class="${s.perf30>0?'pos':s.perf30<0?'neg':'muted'}">${pct(s.perf30)}</b></div>
@@ -458,12 +594,12 @@
         <div class="stock-card-metric"><div class="metric-label">${t('stabilityScore')}</div>${scoreBadge(s.stabilityScore)}</div>
         <div class="stock-card-metric"><div class="metric-label">${t('entryRisk')}</div>${scoreBadge(s.entryRisk,'risk')}</div>
       </div>
-      <div class="stock-card-actions"><span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag||'—')}</span><span>${chartState}</span><button class="btn small" data-view="${s.symbol}">View</button></div>
+      <div class="stock-card-actions"><span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag||'—')}</span><span>${chartBadge(s)}</span><button class="btn small" data-view="${s.symbol}">View</button></div>
     </div>`;
   }
   function rowHtml(s){
     const err=s.error?`<div class="muted" style="max-width:180px;white-space:normal">${escapeHtml(s.error)}</div>`:'';
-    return `<tr><td>${statusBadge(s)}${err}</td><td><span class="ticker" data-view="${s.symbol}">${s.symbol}</span></td><td>${escapeHtml(s.name||'—')}</td><td><span class="badge">${escapeHtml(s.theme||'Other')}</span></td><td class="num">${money(s.c)}</td><td class="num ${s.dp>0?'pos':s.dp<0?'neg':''}">${pct(s.dp)}</td><td class="num ${s.perf5>0?'pos':s.perf5<0?'neg':''}">${pct(s.perf5)}</td><td class="num ${s.perf30>0?'pos':s.perf30<0?'neg':''}">${pct(s.perf30)}</td><td class="num ${s.perf90>0?'pos':s.perf90<0?'neg':''}">${pct(s.perf90)}</td><td class="num">${scoreBadge(s.trendScore)}</td><td class="num">${scoreBadge(s.stabilityScore)}</td><td class="num">${scoreBadge(s.entryRisk,'risk')}</td><td>${s.actionTag?`<span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag)}</span>`:'—'}</td><td>${s.status==='live'?escapeHtml(s.source||'Finnhub API'):'—'}${s.chartError?`<div class="muted" style="max-width:210px;white-space:normal">${escapeHtml(s.chartError)}</div>`:''}</td><td><button class="btn small" data-view="${s.symbol}">${t('view')}</button> <button class="btn small danger" data-remove="${s.symbol}">${t('remove')}</button></td></tr>`;
+    return `<tr><td>${statusBadge(s)}${err}</td><td><span class="ticker" data-view="${s.symbol}">${s.symbol}</span></td><td>${escapeHtml(s.name||'—')}</td><td><span class="badge">${escapeHtml(s.theme||'Other')}</span></td><td><select class="priority-select" data-priority="${s.symbol}"><option value="Core" ${s.priority==='Core'?'selected':''}>${t('core')}</option><option value="Watch" ${(!s.priority||s.priority==='Watch')?'selected':''}>${t('watch')}</option><option value="Speculative" ${s.priority==='Speculative'?'selected':''}>${t('speculative')}</option></select></td><td class="num">${money(s.c)}</td><td class="num ${s.dp>0?'pos':s.dp<0?'neg':''}">${pct(s.dp)}</td><td class="num ${s.perf5>0?'pos':s.perf5<0?'neg':''}">${pct(s.perf5)}</td><td class="num ${s.perf30>0?'pos':s.perf30<0?'neg':''}">${pct(s.perf30)}</td><td class="num ${s.perf90>0?'pos':s.perf90<0?'neg':''}">${pct(s.perf90)}</td><td class="num">${scoreBadge(s.trendScore)}</td><td class="num">${scoreBadge(s.stabilityScore)}</td><td class="num">${scoreBadge(s.entryRisk,'risk')}</td><td>${s.actionTag?`<span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag)}</span>`:'—'}${warningHtml(s)}</td><td>${chartBadge(s)}<div class="muted" style="max-width:240px;white-space:normal;margin-top:4px">${s.status==='live'?escapeHtml(s.source||'Finnhub API'):'—'}${s.chartError?' · '+escapeHtml(s.chartError):''}</div></td><td><button class="btn small" data-view="${s.symbol}">${t('view')}</button> <button class="btn small danger" data-remove="${s.symbol}">${t('remove')}</button></td></tr>`;
   }
   function bindRowActions(){
     document.querySelectorAll('[data-view]').forEach(el=>el.onclick=()=>{activeSymbol=el.dataset.view;activePage='detail';render();});
@@ -477,9 +613,10 @@
       <div class="split"><div class="card"><div class="detail-title"><div><h2 style="margin:0">${s.symbol}</h2><div class="muted">${escapeHtml(s.name||'—')} · ${escapeHtml(s.theme||'')}</div><div class="big-price">${money(s.c)}</div><div class="${s.dp>0?'pos':s.dp<0?'neg':'muted'}">${pct(s.dp)} · ${s.d?money(s.d):'—'}</div></div><span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag||t('waiting'))}</span></div><div class="chartbox"><canvas id="${chartId}"></canvas></div><div class="muted" style="font-size:12px;margin-top:8px">${t('chartSource')}: ${escapeHtml(s.chartSource||'—')}${s.chartError?' · '+escapeHtml(s.chartError):''}</div></div>
       <div class="grid"><div class="card"><h3>${t('currentPrice')}</h3><div class="kpi-grid"><div class="kpi"><div class="metric-label">${t('open')}</div><b>${money(s.o)}</b></div><div class="kpi"><div class="metric-label">${t('high')}</div><b>${money(s.h)}</b></div><div class="kpi"><div class="metric-label">${t('low')}</div><b>${money(s.l)}</b></div><div class="kpi"><div class="metric-label">${t('prevClose')}</div><b>${money(s.pc)}</b></div><div class="kpi"><div class="metric-label">${t('volume')}</div><b>${fmt(s.latestVolume,0)}</b></div><div class="kpi"><div class="metric-label">${t('updated')}</div><b style="font-size:12px">${s.updatedAt?new Date(s.updatedAt).toLocaleString():'—'}</b></div></div></div>
       <div class="card"><h3>${t('technicalIndicators')}</h3><div class="kpi-grid"><div class="kpi"><div class="metric-label">${t('rsi')}</div><b>${fmt(s.rsi,1)}</b></div><div class="kpi"><div class="metric-label">${t('ma20')}</div><b>${money(s.ma20)}</b></div><div class="kpi"><div class="metric-label">${t('ma50')}</div><b>${money(s.ma50)}</b></div><div class="kpi"><div class="metric-label">${t('ma200')}</div><b>${money(s.ma200)}</b></div><div class="kpi"><div class="metric-label">${t('trendScore')}</div><b>${fmt(s.trendScore,0)}</b></div><div class="kpi"><div class="metric-label">${t('entryRisk')}</div><b>${fmt(s.entryRisk,0)}</b></div></div></div></div></div>
+      <div class="card" style="margin-top:16px"><h3>${t('priority')} / ${t('riskWarning')}</h3><div class="row" style="margin-bottom:10px">${priorityBadge(s)}${chartBadge(s)}</div>${warningHtml(s)}<div class="field"><label>${t('notes')}</label><textarea class="note-box" id="stockNotes">${escapeHtml(s.notes||'')}</textarea></div><button class="btn" id="saveNotesBtn">${t('saveNotes')}</button></div>
       ${s.status==='error'?`<div class="notice error" style="margin-top:16px"><b>${t('error')}</b><div>${escapeHtml(s.error||'')}</div></div>`:''}`;
     $('backBtn').onclick=()=>{activePage='watchlist';activeSymbol=null;render();};
-    $('detailChartBtn').onclick=()=>refreshChartData([s.symbol]);
+    $('detailChartBtn').onclick=()=>refreshChartData([s.symbol]); if($('saveNotesBtn')) $('saveNotesBtn').onclick=()=>{const w=state.watchlist.find(x=>x.symbol===s.symbol); if(w){w.notes=$('stockNotes').value; saveState(); render();}};
     setTimeout(()=>drawChart(chartId,s.candles||[],s.chartError),0);
   }
   function renderRanking(){
@@ -491,6 +628,7 @@
       return `<div class="card"><h3>${escapeHtml(cat)}</h3><div class="kpi-grid"><div class="kpi"><div class="metric-label">${t('strongTrend')}</div><b class="ticker" data-view="${best.symbol}">${best.symbol}</b><div>${scoreBadge(best.trendScore)}</div></div><div class="kpi"><div class="metric-label">${t('stableCandidate')}</div><b class="ticker" data-view="${stable.symbol}">${stable.symbol}</b><div>${scoreBadge(stable.stabilityScore)}</div></div><div class="kpi"><div class="metric-label">${t('avoidChasing')}</div><b class="ticker" data-view="${risk.symbol}">${risk.symbol}</b><div>${scoreBadge(risk.entryRisk,'risk')}</div></div></div></div>`;
     }).join('')}</div>`;
     bindRowActions();
+    updateMarketClocks();
   }
   function renderWeekly(){
     const stocks=hydrateStocks(); const live=stocks.filter(s=>s.status==='live'); const error=stocks.filter(s=>s.status==='error');
@@ -503,13 +641,14 @@
     ];
     $('page').innerHTML=`${renderSummaryCards()}<div class="card" style="margin-top:16px"><h2 style="margin-top:0">${t('weekly')}</h2>${buckets.map(([name,arr])=>`<div class="bucket"><div><div class="bucket-title">${name}</div><div class="muted">${arr.length} ${t('ticker')}</div></div><div class="pill-list">${arr.length?arr.map(s=>`<span class="badge ${s.status==='error'?'red':s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'} ticker" data-view="${s.symbol}">${s.symbol}</span>`).join(''):`<span class="muted">—</span>`}</div></div>`).join('')}</div>`;
     bindRowActions();
+    updateMarketClocks();
   }
   function renderSettings(){
     const errors=hydrateStocks().filter(s=>s.status==='error' || s.chartError);
     $('page').innerHTML=`<div class="card"><h2 style="margin-top:0">${t('settings')}</h2><div class="notice warn"><div><b>${t('noMock')}</b><div class="muted">${t('apiEndpoint')}</div></div></div>
       <div class="field"><label>Finnhub API Key · Quote / Price</label><input class="input" id="settingsKey" type="password" value="${escapeHtml(currentKey())}" placeholder="${t('keyPlaceholder')}"></div>
       <div class="field"><label>Twelve Data API Key · Historical Chart / K-line</label><input class="input" id="settingsChartKey" type="password" value="${escapeHtml(currentChartKey())}" placeholder="${t('chartKeyPlaceholder')}"></div>
-      <button class="btn primary" id="settingsSave">${t('saveKey')}</button></div>${errors.length?`<div class="card" style="margin-top:16px"><h3>${t('errors')}</h3><ul class="error-list">${errors.map(e=>`<li><b>${e.symbol}</b>: ${escapeHtml(e.error||e.chartError||'Unknown error')}</li>`).join('')}</ul></div>`:''}`;
+      <button class="btn primary" id="settingsSave">${t('saveKey')}</button></div><div style="margin-top:16px">${renderStatusStrip()}</div>${errors.length?`<div class="card" style="margin-top:16px"><h3>${t('errors')}</h3><ul class="error-list">${errors.map(e=>`<li><b>${e.symbol}</b>: ${escapeHtml(e.error||e.chartError||'Unknown error')}</li>`).join('')}</ul></div>`:''}`;
     $('settingsSave').onclick=()=>{localStorage.setItem(KEY_STORAGE,$('settingsKey').value.trim());localStorage.setItem(CHART_KEY_STORAGE,$('settingsChartKey').value.trim());$('apiKey').value=$('settingsKey').value.trim(); if($('chartApiKey')) $('chartApiKey').value=$('settingsChartKey').value.trim(); render();};
   }
   function render(){setTopTexts();renderNotice();renderTabs(); if(activePage==='detail')renderDetail(); else if(activePage==='ranking')renderRanking(); else if(activePage==='weekly')renderWeekly(); else if(activePage==='settings')renderSettings(); else renderWatchlist();}
@@ -665,7 +804,7 @@
   }
   function openModal(){ $('tickerModal').classList.add('show'); $('newSymbol').focus(); }
   function closeModal(){ $('tickerModal').classList.remove('show'); $('newSymbol').value=''; }
-  function addTicker(){ const sym=$('newSymbol').value.trim().toUpperCase().replace(/[^A-Z0-9.]/g,''); const theme=$('newTheme').value; if(!sym)return; if(!state.watchlist.find(w=>w.symbol===sym)) state.watchlist.push({symbol:sym,theme}); saveState(); closeModal(); render(); }
+  function addTicker(){ const sym=$('newSymbol').value.trim().toUpperCase().replace(/[^A-Z0-9.]/g,''); const theme=$('newTheme').value; if(!sym)return; if(!state.watchlist.find(w=>w.symbol===sym)) state.watchlist.push({symbol:sym,theme,priority:($('newPriority')?$('newPriority').value:'Watch'),notes:''}); saveState(); closeModal(); render(); }
   function removeTicker(sym){ state.watchlist=state.watchlist.filter(w=>w.symbol!==sym); delete state.stocks[sym]; saveState(); if(activeSymbol===sym){activePage='watchlist';activeSymbol=null;} render(); }
 
   function startAutoRefresh(){
@@ -691,6 +830,8 @@
   $('closeModal').onclick=closeModal; $('cancelModal').onclick=closeModal; $('addTickerConfirm').onclick=addTicker; $('newSymbol').addEventListener('keydown',e=>{if(e.key==='Enter')addTicker();}); $('tickerModal').addEventListener('click',e=>{if(e.target.id==='tickerModal')closeModal();});
   startAutoRefresh();
   render();
+  setInterval(updateMarketClocks,1000);
+  updateMarketClocks();
 })();
 </script>
 </body>
