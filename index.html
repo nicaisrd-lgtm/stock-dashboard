@@ -167,7 +167,18 @@
     .status-card .label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.02em}
     .status-card .value{margin-top:5px;font-weight:900;font-size:14px}
     .warning-text{font-size:12px;line-height:1.35;color:var(--amber);margin-top:6px;max-width:240px;white-space:normal}
-    .priority-select{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:6px 8px;font-size:11px;font-weight:800;max-width:118px}
+        .priority-toggle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:8px}
+    .priority-toggle-label{font-size:11px;color:var(--muted);font-weight:900;margin-right:2px;white-space:nowrap}
+    .priority-btn{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:900;cursor:pointer;line-height:1;min-height:30px}
+    .priority-btn:hover{border-color:var(--blue);color:var(--text)}
+    .priority-btn.active{color:#fff;border-color:transparent}
+    .priority-btn.core.active{background:var(--green)}
+    .priority-btn.watch.active{background:var(--purple)}
+    .priority-btn.speculative.active{background:var(--red)}
+    .priority-help{font-size:11px;color:var(--muted);line-height:1.35;margin-top:-4px}
+    td .priority-toggle{background:transparent;border:0;padding:0;min-width:212px}
+    td .priority-toggle-label{display:none}
+    td .priority-btn{padding:6px 9px;min-height:28px}
     .note-box{width:100%;min-height:84px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:10px;font-family:inherit;font-size:13px;resize:vertical}
 
     .market-clocks{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -180,7 +191,7 @@
       .controls{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}.api-key{width:100%;grid-column:span 2}.controls .btn{width:100%;min-height:42px}.controls #langBtn{grid-column:span 1}
       .wrap{max-width:100%;padding:18px 16px 48px}.tabs{gap:10px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.tab{padding:12px 16px;min-width:max-content}
       .cards{grid-template-columns:repeat(4,1fr);gap:12px}.card{border-radius:20px;padding:16px}.metric{font-size:24px}
-      .toolbar{align-items:flex-start}.filter-panel{position:sticky;top:96px;z-index:4;border-radius:20px}.filterbar{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}.filterbar .input,.filterbar .select,.filterbar .btn{width:100%;min-width:0}.filterbar #sortSelect{grid-column:span 2}.chips{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}.chip{min-width:max-content;padding:10px 13px}
+      .toolbar{align-items:flex-start}.filter-panel{position:sticky;top:96px;z-index:4;border-radius:20px}.filterbar{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px}.filterbar .input,.filterbar .select,.filterbar .btn{width:100%;min-width:0}.filterbar #sortSelect{grid-column:span 1}.chips{overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}.chip{min-width:max-content;padding:10px 13px}
       .desktop-table-wrap{display:none}.ipad-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.ipad-hint{display:block}.stock-card{min-height:272px}.stock-card-symbol{font-size:28px}.stock-card-price{font-size:30px}
       .split{grid-template-columns:1fr}.chartbox{height:420px}.kpi-grid{grid-template-columns:repeat(3,1fr)}.bucket{grid-template-columns:180px 1fr}.modal-card{max-width:720px}.two{grid-template-columns:1fr 1fr}
       body{background:linear-gradient(180deg,#f7f9fc 0%,#eef3f9 100%)}
@@ -191,6 +202,10 @@
 
     @media(max-width:960px){.cards{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.top-inner{align-items:flex-start;flex-direction:column}.api-key{width:100%}.controls{width:100%}.input{min-width:0;width:100%}.bucket{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
     @media(max-width:560px){.status-strip{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.metric{font-size:22px}h1{font-size:16px}.wrap{padding:14px 12px}.card{padding:14px}.chartbox{height:270px}}
+
+    /* Sticky filter bar: keeps Search / Theme / Sort / Quick chips visible while scrolling */
+    .filter-panel{position:sticky;top:62px;z-index:4;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(16,24,40,.07)}
+    @media (max-width:760px){.filter-panel{top:150px}}
 
     /* Compact header override: keeps brand + menu on one row in fullscreen/tablet */
     .top-inner{padding:10px 14px;gap:10px;flex-direction:row;align-items:center;justify-content:space-between;max-width:1480px}
@@ -222,6 +237,125 @@
       .top-inner{flex-direction:column;align-items:flex-start}
       .controls{width:100%;justify-content:flex-start;flex-wrap:wrap;overflow-x:visible}
       .api-key{width:100%;min-width:0}
+    }
+
+
+    /* Stock table area: scrolls inside its own panel so the column header stays directly under the sticky filters. */
+    :root{--stock-table-max-height:520px;}
+    .desktop-table-wrap{
+      max-width:100%;
+      max-height:var(--stock-table-max-height);
+      overflow:auto;
+      position:relative;
+    }
+    .desktop-table-wrap thead th{
+      position:sticky;
+      top:0;
+      z-index:3;
+      background:var(--panel2);
+      box-shadow:0 1px 0 var(--line), 0 8px 18px rgba(16,24,40,.06);
+    }
+    [data-theme="dark"] .desktop-table-wrap thead th{
+      background:#182235;
+      box-shadow:0 1px 0 rgba(148,163,184,.18), 0 8px 18px rgba(2,6,23,.35);
+    }
+    @media (max-width:1180px){
+      .desktop-table-wrap{max-height:none;overflow:auto;}
+      .desktop-table-wrap thead th{top:0;}
+    }
+
+
+    /* Table overflow fix: stop long risk/source text from spilling outside the viewport */
+    .desktop-table-wrap table{min-width:1500px;}
+    .desktop-table-wrap td{vertical-align:top;}
+    .desktop-table-wrap td:nth-child(14),
+    .desktop-table-wrap td:nth-child(15){white-space:normal;}
+    .table-warning{
+      display:block;
+      margin-top:6px;
+      max-width:120px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      color:var(--amber);
+      font-size:12px;
+      line-height:1.25;
+      font-weight:700;
+    }
+
+  
+
+    /* FINAL FIX: keep the table column header pinned directly under the sticky filter panel while the page scrolls. */
+    .desktop-table-wrap{
+      max-height:none !important;
+      overflow-x:auto !important;
+      overflow-y:visible !important;
+      position:relative !important;
+    }
+    .desktop-table-wrap thead th{
+      position:sticky !important;
+      top:var(--sticky-table-head-top, 210px) !important;
+      z-index:5 !important;
+      background:var(--panel2) !important;
+      box-shadow:0 1px 0 var(--line), 0 10px 20px rgba(16,24,40,.08) !important;
+    }
+    .filter-panel{z-index:6 !important;}
+    .desktop-table-wrap td:nth-child(14),
+    .desktop-table-wrap td:nth-child(15){
+      max-width:190px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .source-cell,
+    .table-source,
+    td.source-col{
+      max-width:190px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+  
+
+    /* FINAL STABLE TABLE LAYOUT
+       Keep filter panel sticky, then make the stock table its own scroll area.
+       The column header stays at the top of that table area, directly below filters. */
+    .desktop-table-wrap{
+      max-width:100% !important;
+      max-height:calc(100vh - var(--stock-table-panel-top, 250px)) !important;
+      min-height:420px !important;
+      overflow:auto !important;
+      position:relative !important;
+      isolation:isolate;
+    }
+    .desktop-table-wrap table{
+      border-collapse:separate !important;
+      border-spacing:0 !important;
+      min-width:1500px !important;
+    }
+    .desktop-table-wrap thead{
+      display:table-header-group !important;
+    }
+    .desktop-table-wrap thead th{
+      position:sticky !important;
+      top:0 !important;
+      z-index:10 !important;
+      background:var(--panel2) !important;
+      box-shadow:0 1px 0 var(--line), 0 8px 16px rgba(16,24,40,.06) !important;
+    }
+    [data-theme="dark"] .desktop-table-wrap thead th{
+      background:#182235 !important;
+    }
+    .desktop-table-wrap tbody td{
+      background:var(--panel) !important;
+    }
+    .desktop-table-wrap tbody tr:hover td{
+      background:var(--panel2) !important;
+    }
+    .filter-panel{
+      z-index:20 !important;
+    }
+    @media (max-width:1180px){
+      .desktop-table-wrap{min-height:360px !important;}
     }
 
   </style>
@@ -269,7 +403,7 @@
     <div class="two">
       <div class="field"><label id="symbolLabel">Ticker Symbol</label><input class="input" id="newSymbol" placeholder="e.g. NVDA" /></div>
       <div class="field"><label id="themeLabel">Theme</label><select class="select" id="newTheme"><option>AI Chip</option><option>AI Cloud</option><option>AI Platform</option><option>Stable Big Tech</option><option>High Volatility</option><option>Healthcare Growth</option><option>Other</option></select></div>
-      <div class="field"><label id="priorityLabel">Priority</label><select class="select" id="newPriority"><option>Core</option><option selected>Watch</option><option>Speculative</option></select></div>
+      <div class="field"><label id="priorityLabel">My Focus</label><select class="select" id="newPriority"><option value="Core">Core</option><option value="Watch" selected>Watch</option><option value="Speculative">High Risk</option></select></div>
     </div>
     <div class="row" style="justify-content:flex-end;margin-top:18px"><button class="btn" id="cancelModal">Cancel</button><button class="btn primary" id="addTickerConfirm">Add</button></div>
   </div>
@@ -293,7 +427,7 @@
       noticeNoKey:'Enter a Finnhub API Key for live quotes. Add a Twelve Data API Key if Finnhub does not return chart candles. This version never uses mock or fallback data.', noticeLoaded:'Live prices loaded from Finnhub. Trend data refreshes separately and is cached.', noticeError:'Live API error. No fallback data is used.',
       disclaimer:'For personal market observation and education only. This is not financial advice or a trading instruction. Live data may be delayed depending on your API plan.',
       watchlist:'Watchlist', detail:'Stock Detail', ranking:'Category Ranking', weekly:'Weekly Action Plan', settings:'Settings',
-      addTicker:'Add Ticker', exportCSV:'Export CSV', search:'Search ticker/company', filter:'Theme', sort:'Sort', actionFilter:'Action', riskFilter:'Risk', reset:'Reset', all:'All', allThemes:'All Themes', allActions:'All Actions', allRisks:'All Risks', quickAll:'All', strongToday:'Strong Today', aiRelated:'AI Related', sortDefault:'Default Sort', sortChangeDesc:'Daily Change High to Low', sortChangeAsc:'Daily Change Low to High', sort5Desc:'5D Trend High to Low', sort1mDesc:'1M Trend High to Low', sort3mDesc:'3M Trend High to Low', sortTrendDesc:'Trend Score High to Low', sortStabilityDesc:'Stability Score High to Low', sortRiskDesc:'Entry Risk High to Low', sortRiskAsc:'Entry Risk Low to High', sortTickerAsc:'Ticker A-Z', liveOnly:'Live only', source:'Source', status:'Status',
+      addTicker:'Add Ticker', exportCSV:'Export CSV', search:'Search ticker/company', filter:'Theme', sort:'Sort', actionFilter:'View', riskFilter:'Risk', reset:'Reset', all:'All', allThemes:'All Categories', allActions:'All Tags', allRisks:'All Risks', quickAll:'All', strongToday:'Up Today', aiRelated:'AI Related', simpleView:'View Mode', viewAll:'All Stocks', viewAI:'AI Related', viewStrong:'Up Today', viewLowerRisk:'Lower Risk', viewWait:'Wait Pullback', viewAvoid:'Avoid Chasing', sortDefault:'Default Sort', sortChangeDesc:'Today Up', sortChangeAsc:'Today Down', sort5Desc:'Best 5D', sort1mDesc:'Best 1M', sort3mDesc:'Best 3M', sortTrendDesc:'Best Trend', sortStabilityDesc:'Most Stable', sortRiskDesc:'Highest Risk', sortRiskAsc:'Lowest Risk', sortTickerAsc:'Ticker A-Z', liveOnly:'Live only', source:'Source', status:'Status',
       ticker:'Ticker', company:'Company', theme:'Theme', price:'Price', change:'Change %', fiveD:'5D', oneM:'1M', threeM:'3M', trendScore:'Trend', stabilityScore:'Stability', entryRisk:'Entry Risk', action:'Observation Tag', updated:'Updated', operations:'Actions',
       waiting:'Waiting for live refresh', loading:'Loading live data...', live:'Live', error:'Error', noData:'No live data', remove:'Remove', view:'View', retry:'Retry', close:'Close', cancel:'Cancel', add:'Add',
       modalTitle:'Add Ticker', symbolLabel:'Ticker Symbol', themeLabel:'Theme', currentPrice:'Current Price', dailyChange:'Daily Change', volume:'Volume', high:'High', low:'Low', open:'Open', prevClose:'Previous Close',
@@ -302,14 +436,14 @@
       stableCandidate:'Stable Candidate', moderate:'Moderate', mediumRisk:'Medium Risk', highVolatility:'High Volatility', speculative:'Speculative',
       lowerRisk:'Lower Entry Risk', moderateRisk:'Moderate Entry Risk', elevatedRisk:'Elevated Entry Risk', avoidChasing:'Avoid Chasing', watch:'Watch', waitPullback:'Wait for Pullback', holdWatch:'Hold / Watch', smallOnly:'Small Position Only', watchEntry:'Watch for Entry', earningsWatch:'Earnings Watch',
       bucketCore:'Core Hold / Watch', bucketEntry:'Watch for Entry', bucketPullback:'Wait for Pullback', bucketRisk:'High Risk / Small Only', bucketError:'Data Error / Needs Refresh',
-      noLiveYet:'No live data yet. Enter your API key, then click Refresh Prices. Click Refresh Trend Data separately for 5D / 1M / 3M and charts.', errors:'Errors', apiEndpoint:'API Providers: Finnhub quote for live prices; Finnhub/Twelve Data for low-frequency trend charts', noMock:'Strict mode: mock data and offline fallback are disabled.', marketStatus:'US Market', marketOpen:'Open', marketPre:'Pre-market', marketAfter:'After-hours', marketClosed:'Closed', pricesUpdated:'Prices updated', trendsUpdated:'Trend data updated', apiHealth:'API Health', finnhubHealth:'Finnhub', twelveHealth:'Twelve Data', connected:'Connected', notConnected:'Not connected', rateLimited:'Rate limited / error', trendStatus:'Trend Status', trendLive:'Trend live', trendCached:'Trend cached', trendNotLoaded:'Trend not loaded', cacheAgo:'ago', priority:'Priority', core:'Core', speculative:'Speculative', riskWarning:'Risk Warning', notes:'Notes', saveNotes:'Save Notes', noWarnings:'No major warning', warningDaily:'Daily gain is high: possible chasing risk.', warningEntry:'Entry risk is high: avoid chasing.', warningRebound:'5D is strong but 1M is weak: may be a short-term rebound only.', warningMomentumRisk:'Strong trend with low stability: high momentum, high risk.', warningChartMissing:'Trend data is missing or API-limited.'
+      noLiveYet:'No live data yet. Enter your API key, then click Refresh Prices. Click Refresh Trend Data separately for 5D / 1M / 3M and charts.', errors:'Errors', apiEndpoint:'API Providers: Finnhub quote for live prices; Finnhub/Twelve Data for low-frequency trend charts', noMock:'Strict mode: mock data and offline fallback are disabled.', marketStatus:'US Market', marketOpen:'Open', marketPre:'Pre-market', marketAfter:'After-hours', marketClosed:'Closed', pricesUpdated:'Prices updated', trendsUpdated:'Trend data updated', apiHealth:'API Health', finnhubHealth:'Finnhub', twelveHealth:'Twelve Data', connected:'Connected', notConnected:'Not connected', rateLimited:'Rate limited / error', trendStatus:'Trend Status', trendLive:'Trend live', trendCached:'Trend cached', trendNotLoaded:'Trend not loaded', cacheAgo:'ago', priority:'My Focus', core:'Core', speculative:'High Risk', riskWarning:'Risk Warning', focusHelp:'Manual label only: Core = main focus, Watch = normal watchlist, High Risk = volatile/speculative watch', notes:'Notes', saveNotes:'Save Notes', noWarnings:'No major warning', warningDaily:'Daily gain is high: possible chasing risk.', warningEntry:'Entry risk is high: avoid chasing.', warningRebound:'5D is strong but 1M is weak: may be a short-term rebound only.', warningMomentumRisk:'Strong trend with low stability: high momentum, high risk.', warningChartMissing:'Trend data is missing or API-limited.'
     },
     zh:{
       title:'NiikeDash', subtitle:'Real-Time Stock Watch Dashboard', saveKey:'保存 Keys', refresh:'刷新价格', refreshCharts:'刷新趋势数据', refreshingCharts:'正在加载趋势...', autoOn:'自动30秒价格：开', autoOff:'自动30秒价格：关', keyPlaceholder:'Finnhub API Key', chartKeyPlaceholder:'Twelve Data K线 Key', chartKeyPlaceholder:'Twelve Data Key for chart',
       noticeNoKey:'输入 Finnhub API Key 用于实时报价。如 Finnhub 不返回K线，请在设置里添加 Twelve Data API Key 作为第二个实时K线数据源。本版本绝不使用 mock 或备用数据。', noticeLoaded:'已从 Finnhub 加载实时价格。趋势数据单独低频刷新并缓存。', noticeError:'实时 API 出错。本版本不会使用备用数据。',
       disclaimer:'仅供个人市场观察与学习使用，不构成财务建议或交易指令。实时数据是否延迟取决于你的 API 套餐。',
       watchlist:'观察列表', detail:'股票详情', ranking:'分类排名', weekly:'每周观察计划', settings:'设置',
-      addTicker:'添加股票', exportCSV:'导出 CSV', search:'搜索代码/公司', filter:'分类', sort:'排序', actionFilter:'观察标签', riskFilter:'风险', reset:'重置', all:'全部', allThemes:'全部主题', allActions:'全部标签', allRisks:'全部风险', quickAll:'全部', strongToday:'今日强势', aiRelated:'AI相关', sortDefault:'默认排序', sortChangeDesc:'涨跌幅：高到低', sortChangeAsc:'涨跌幅：低到高', sort5Desc:'5日趋势：高到低', sort1mDesc:'1月趋势：高到低', sort3mDesc:'3月趋势：高到低', sortTrendDesc:'趋势评分：高到低', sortStabilityDesc:'稳定评分：高到低', sortRiskDesc:'入场风险：高到低', sortRiskAsc:'入场风险：低到高', sortTickerAsc:'代码：A-Z', liveOnly:'仅实时', source:'数据源', status:'状态',
+      addTicker:'添加股票', exportCSV:'导出 CSV', search:'搜索代码/公司', filter:'分类', sort:'排序', actionFilter:'视图', riskFilter:'风险', reset:'重置', all:'全部', allThemes:'全部分类', allActions:'全部标签', allRisks:'全部风险', quickAll:'全部', strongToday:'今日上涨', aiRelated:'AI相关', simpleView:'视图模式', viewAll:'全部股票', viewAI:'AI相关', viewStrong:'今日上涨', viewLowerRisk:'较低风险', viewWait:'等回调', viewAvoid:'避免追高', sortDefault:'默认排序', sortChangeDesc:'今日上涨', sortChangeAsc:'今日下跌', sort5Desc:'5日最好', sort1mDesc:'1月最好', sort3mDesc:'3月最好', sortTrendDesc:'趋势最好', sortStabilityDesc:'最稳定', sortRiskDesc:'风险最高', sortRiskAsc:'风险最低', sortTickerAsc:'代码 A-Z', liveOnly:'仅实时', source:'数据源', status:'状态',
       ticker:'代码', company:'公司', theme:'主题', price:'价格', change:'涨跌幅', fiveD:'5日', oneM:'1月', threeM:'3月', trendScore:'趋势', stabilityScore:'稳定', entryRisk:'入场风险', action:'观察标签', updated:'更新时间', operations:'操作',
       waiting:'等待实时刷新', loading:'正在加载实时数据...', live:'实时', error:'错误', noData:'无实时数据', remove:'删除', view:'查看', retry:'重试', close:'关闭', cancel:'取消', add:'添加',
       modalTitle:'添加股票', symbolLabel:'股票代码', themeLabel:'主题', currentPrice:'当前价格', dailyChange:'日涨跌', volume:'成交量', high:'最高', low:'最低', open:'开盘', prevClose:'前收盘',
@@ -318,7 +452,7 @@
       stableCandidate:'稳定候选', moderate:'中等', mediumRisk:'中等风险', highVolatility:'高波动', speculative:'投机型',
       lowerRisk:'较低入场风险', moderateRisk:'中等入场风险', elevatedRisk:'入场风险偏高', avoidChasing:'避免追高', watch:'观察', waitPullback:'等回调', holdWatch:'持有观察', smallOnly:'仅小仓位', watchEntry:'观察入场', earningsWatch:'财报观察',
       bucketCore:'核心持有 / 观察', bucketEntry:'观察入场', bucketPullback:'等回调', bucketRisk:'高风险 / 小仓位', bucketError:'数据错误 / 需要刷新',
-      noLiveYet:'尚无实时数据。输入 API Key 后点击刷新价格；5日 / 1月 / 3月和趋势图请单独点击刷新趋势数据。', errors:'错误', apiEndpoint:'API 提供商：Finnhub 实时报价；Finnhub/Twelve Data 低频趋势图数据', noMock:'严格模式：模拟数据和离线备用数据已禁用。', marketStatus:'美股状态', marketOpen:'开盘中', marketPre:'盘前', marketAfter:'盘后', marketClosed:'已收盘', pricesUpdated:'价格更新时间', trendsUpdated:'趋势更新时间', apiHealth:'API 状态', finnhubHealth:'Finnhub', twelveHealth:'Twelve Data', connected:'已连接', notConnected:'未连接', rateLimited:'限流 / 错误', trendStatus:'趋势状态', trendLive:'趋势实时', trendCached:'趋势缓存', trendNotLoaded:'趋势未加载', cacheAgo:'前', priority:'关注等级', core:'核心', speculative:'高波动', riskWarning:'风险提醒', notes:'个人备注', saveNotes:'保存备注', noWarnings:'暂无主要风险提醒', warningDaily:'单日涨幅较高：可能存在追高风险。', warningEntry:'入场风险较高：避免追高。', warningRebound:'5日强但1月弱：可能只是短线反弹。', warningMomentumRisk:'趋势强但稳定性低：动能强，风险也高。', warningChartMissing:'趋势数据缺失或 API 受限。'
+      noLiveYet:'尚无实时数据。输入 API Key 后点击刷新价格；5日 / 1月 / 3月和趋势图请单独点击刷新趋势数据。', errors:'错误', apiEndpoint:'API 提供商：Finnhub 实时报价；Finnhub/Twelve Data 低频趋势图数据', noMock:'严格模式：模拟数据和离线备用数据已禁用。', marketStatus:'美股状态', marketOpen:'开盘中', marketPre:'盘前', marketAfter:'盘后', marketClosed:'已收盘', pricesUpdated:'价格更新时间', trendsUpdated:'趋势更新时间', apiHealth:'API 状态', finnhubHealth:'Finnhub', twelveHealth:'Twelve Data', connected:'已连接', notConnected:'未连接', rateLimited:'限流 / 错误', trendStatus:'趋势状态', trendLive:'趋势实时', trendCached:'趋势缓存', trendNotLoaded:'趋势未加载', cacheAgo:'前', priority:'我的关注', core:'核心', speculative:'高风险', riskWarning:'风险提醒', focusHelp:'手动标签：核心=重点观察，观察=普通观察，高风险=波动/投机提醒', notes:'个人备注', saveNotes:'保存备注', noWarnings:'暂无主要风险提醒', warningDaily:'单日涨幅较高：可能存在追高风险。', warningEntry:'入场风险较高：避免追高。', warningRebound:'5日强但1月弱：可能只是短线反弹。', warningMomentumRisk:'趋势强但稳定性低：动能强，风险也高。', warningChartMissing:'趋势数据缺失或 API 受限。'
     }
   };
   let state=loadState();
@@ -400,7 +534,7 @@
     return `<span class="badge amber">${t('trendNotLoaded')}</span>`;
   }
   function priorityLabel(p){ if(p==='Core') return t('core'); if(p==='Speculative') return t('speculative'); return t('watch'); }
-  function priorityBadge(s){ const p=s.priority||'Watch'; return `<span class="badge ${p==='Core'?'green':p==='Speculative'?'red':'purple'}">${priorityLabel(p)}</span>`; }
+  function priorityBadge(s){ const p=s.priority||'Watch'; return `<span class="badge ${p==='Core'?'green':p==='Speculative'?'red':'purple'}" title="${t('focusHelp')}">${priorityLabel(p)}</span>`; }
   function riskWarnings(s){
     const out=[];
     if((s.dp||0)>5) out.push(t('warningDaily'));
@@ -411,6 +545,12 @@
     return out;
   }
   function warningHtml(s){ const w=riskWarnings(s); return w.length?`<div class="warning-text">⚠ ${w[0]}</div>`:`<div class="muted" style="font-size:12px">${t('noWarnings')}</div>`; }
+  function tableWarningHtml(s){
+    const w=riskWarnings(s);
+    if(!w.length) return '';
+    const shortLabel = (s.entryRisk||0)>=80 ? t('avoidChasing') : (s.entryRisk||0)>=60 ? t('riskWarning') : t('trendStatus');
+    return `<span class="table-warning" title="${escapeHtml(w[0])}">⚠ ${escapeHtml(shortLabel)}</span>`;
+  }
   function apiHealth(){
     const stocks=Object.values(state.stocks||{});
     const quoteErr=stocks.some(s=>s.status==='error');
@@ -437,7 +577,7 @@
     state.theme='light'; $('app').setAttribute('data-theme','light'); $('appTitle').textContent=t('title'); $('appSubtitle').textContent=t('subtitle');
     $('saveKeyBtn').textContent=t('saveKey'); $('refreshBtn').innerHTML=isRefreshing?`<span class="loader"></span> ${t('loading')}`:t('refresh'); if($('refreshChartsBtn')) $('refreshChartsBtn').innerHTML=isRefreshingCharts?`<span class="loader"></span> ${t('refreshingCharts')}`:t('refreshCharts'); $('autoRefreshBtn').textContent=state.autoRefresh?t('autoOn'):t('autoOff'); $('autoRefreshBtn').classList.toggle('active',!!state.autoRefresh); $('langBtn').textContent=state.lang==='en'?'中文':'EN'; $('apiKey').placeholder=t('keyPlaceholder'); if($('chartApiKey')) $('chartApiKey').placeholder=t('chartKeyPlaceholder');
     $('footerText').innerHTML=`<b>${t('liveOnly')}</b> · ${t('apiEndpoint')} · ${t('noMock')}<br>${t('disclaimer')}`;
-    $('modalTitle').textContent=t('modalTitle'); $('symbolLabel').textContent=t('symbolLabel'); $('themeLabel').textContent=t('themeLabel'); if($('priorityLabel')) $('priorityLabel').textContent=t('priority'); $('cancelModal').textContent=t('cancel'); $('addTickerConfirm').textContent=t('add');
+    $('modalTitle').textContent=t('modalTitle'); $('symbolLabel').textContent=t('symbolLabel'); $('themeLabel').textContent=t('themeLabel'); if($('priorityLabel')) $('priorityLabel').textContent=t('priority'); if($('newPriority')){ $('newPriority').options[0].text=t('core'); $('newPriority').options[1].text=t('watch'); $('newPriority').options[2].text=t('speculative'); } $('cancelModal').textContent=t('cancel'); $('addTickerConfirm').textContent=t('add');
   }
   function renderNotice(){
     const hasKey=!!currentKey(); const stocks=Object.values(state.stocks||{}); const errors=stocks.filter(s=>s.status==='error'); const lives=stocks.filter(s=>s.status==='live');
@@ -454,7 +594,17 @@
     document.querySelectorAll('[data-page]').forEach(el=>el.onclick=()=>{activePage=el.dataset.page;activeSymbol=null;render();});
   }
   function hydrateStocks(){
-    return state.watchlist.map(w=>Object.assign({symbol:w.symbol,theme:w.theme,status:'waiting'},state.stocks[w.symbol]||{}));
+    // Keep user-managed fields such as Priority and Notes from the watchlist.
+    // Live API data is stored separately in state.stocks, so we merge both.
+    // Order matters: API values can update quote fields, but manual fields stay from watchlist.
+    return state.watchlist.map(w=>{
+      const api=state.stocks[w.symbol]||{};
+      return Object.assign({symbol:w.symbol,theme:w.theme,status:'waiting'}, api, {
+        priority:w.priority||api.priority||defaultPriority(w.symbol),
+        notes:w.notes||api.notes||'',
+        theme:w.theme||api.theme||'Other'
+      });
+    });
   }
   function getRiskBucket(s){
     const r=typeof s.entryRisk==='number'?s.entryRisk:null;
@@ -478,12 +628,11 @@
   }
   function applyQuick(arr){
     if(quickFilter==='All') return arr;
-    if(quickFilter==='strongToday') return arr.filter(s=>(s.dp||0)>0);
-    if(quickFilter==='waitPullback') return arr.filter(s=>matchesAction(s,'Wait for Pullback'));
-    if(quickFilter==='avoidChasing') return arr.filter(s=>matchesAction(s,'Avoid Chasing'));
-    if(quickFilter==='stableCandidate') return arr.filter(s=>matchesAction(s,'Stable Candidate'));
-    if(quickFilter==='highVolatility') return arr.filter(s=>matchesAction(s,'High Volatility'));
     if(quickFilter==='aiRelated') return arr.filter(s=>String(s.theme||'').startsWith('AI'));
+    if(quickFilter==='strongToday') return arr.filter(s=>(s.dp||0)>0);
+    if(quickFilter==='lowerRisk') return arr.filter(s=>(s.entryRisk||999)<45);
+    if(quickFilter==='waitPullback') return arr.filter(s=>matchesAction(s,'Wait for Pullback'));
+    if(quickFilter==='avoidChasing') return arr.filter(s=>matchesAction(s,'Avoid Chasing') || (s.entryRisk||0)>=80);
     return arr;
   }
   function sortValue(s,key){
@@ -540,10 +689,12 @@
   }
   function renderWatchlist(){
     const arr=filteredStocks();
-    const actionOptions=[['All',t('allActions')],['Watch',t('watch')],['Hold',t('holdWatch')],['Wait for Pullback',t('waitPullback')],['Avoid Chasing',t('avoidChasing')],['High Volatility',t('highVolatility')],['Stable Candidate',t('stableCandidate')],['Momentum Candidate','Momentum Candidate']];
-    const riskOptions=[['All',t('allRisks')],['Lower Entry Risk',t('lowerRisk')],['Moderate Entry Risk',t('moderateRisk')],['Elevated Entry Risk',t('elevatedRisk')],['Avoid Chasing',t('avoidChasing')]];
-    const sortOptions=[['default',t('sortDefault')],['change_desc',t('sortChangeDesc')],['change_asc',t('sortChangeAsc')],['perf5_desc',t('sort5Desc')],['perf30_desc',t('sort1mDesc')],['perf90_desc',t('sort3mDesc')],['trend_desc',t('sortTrendDesc')],['stability_desc',t('sortStabilityDesc')],['risk_desc',t('sortRiskDesc')],['risk_asc',t('sortRiskAsc')],['symbol_asc',t('sortTickerAsc')]];
-    const chips=[['All',t('quickAll')],['strongToday',t('strongToday')],['waitPullback',t('waitPullback')],['avoidChasing',t('avoidChasing')],['stableCandidate',t('stableCandidate')],['highVolatility',t('highVolatility')],['aiRelated',t('aiRelated')]];
+    // Red-team simplified filter logic:
+    // Keep only one search, one category selector, one sort selector, and quick-view chips.
+    // Removed the duplicate View dropdown because it repeated the chips and made the workflow unclear.
+    const viewOptions=[['All',t('viewAll')],['aiRelated',t('viewAI')],['strongToday',t('viewStrong')],['waitPullback',t('viewWait')],['avoidChasing',t('viewAvoid')]];
+    const sortOptions=[['default',t('sortDefault')],['change_desc',t('sortChangeDesc')],['change_asc',t('sortChangeAsc')],['perf5_desc',t('sort5Desc')],['perf30_desc',t('sort1mDesc')],['risk_asc',t('sortRiskAsc')],['symbol_asc',t('sortTickerAsc')]];
+    const chips=viewOptions;
     $('page').innerHTML=`${renderSummaryCards()}
       <div class="toolbar"><div class="row">
         <button class="btn primary" id="addTickerBtn">+ ${t('addTicker')}</button><button class="btn" id="exportBtn">${t('exportCSV')}</button><div class="market-clocks"><span class="time-chip"><span class="label" id="nyClockLabel">NY</span><span class="time" id="nyClock">--:--:--</span></span><span class="time-chip"><span class="label" id="sydClockLabel">Sydney</span><span class="time" id="sydClock">--:--:--</span></span></div>
@@ -551,29 +702,34 @@
       <div class="filter-panel card">
         <div class="filterbar">
           <input class="input" id="searchBox" placeholder="${t('search')}" value="${escapeHtml(search)}" />
-          <select class="select" id="themeFilter"><option value="All">${t('allThemes')}</option>${THEMES.filter(x=>x!=='All').map(x=>filterOption(x,x,activeTheme)).join('')}</select>
-          <select class="select" id="actionFilter">${actionOptions.map(([v,l])=>filterOption(v,l,activeAction)).join('')}</select>
-          <select class="select" id="riskFilter">${riskOptions.map(([v,l])=>filterOption(v,l,activeRisk)).join('')}</select>
-          <select class="select" id="sortSelect">${sortOptions.map(([v,l])=>filterOption(v,l,sort)).join('')}</select>
+          <select class="select" id="themeFilter" title="${t('filter')}"><option value="All">${t('allThemes')}</option>${THEMES.filter(x=>x!=='All').map(x=>filterOption(x,x,activeTheme)).join('')}</select>
+          <select class="select" id="sortSelect" title="${t('sort')}">${sortOptions.map(([v,l])=>filterOption(v,l,sort)).join('')}</select>
           <button class="btn" id="resetFilters">${t('reset')}</button>
         </div>
         <div class="chips">${chips.map(([v,l])=>`<button class="chip ${quickFilter===v?'active':''}" data-chip="${v}">${l}</button>`).join('')}</div>
+        <div class="muted" style="font-size:12px;line-height:1.35">${state.lang==='zh'?'筛选逻辑：上面只做搜索、分类和排序；下面的按钮是快速视图，不再重复下拉菜单。':'Filter logic: top row is search, category and sort only; chips below are quick views, no duplicate dropdown.'}</div>
       </div>
       <div class="ipad-hint">iPad layout · ${t('ticker')} cards. Tap a ticker or View to open the detail chart.</div><div class="ipad-card-grid">${arr.length?arr.map(ipadCardHtml).join(''):`<div class="empty card">${t('noData')}</div>`}</div><div class="table-wrap desktop-table-wrap"><table><thead><tr><th>${t('status')}</th><th class="sortable" data-sortkey="symbol">${t('ticker')}<span class="sortmark">${parseSort().key==='symbol'?'↑':'↕'}</span></th><th>${t('company')}</th><th>${t('theme')}</th><th>${t('priority')}</th><th class="num">${t('price')}</th>${sortHeader(t('change'),'change')}${sortHeader(t('fiveD'),'perf5')}${sortHeader(t('oneM'),'perf30')}${sortHeader(t('threeM'),'perf90')}${sortHeader(t('trendScore'),'trend')}${sortHeader(t('stabilityScore'),'stability')}${sortHeader(t('entryRisk'),'risk')}<th>${t('action')}</th><th>${t('source')}</th><th>${t('operations')}</th></tr></thead><tbody>${arr.length?arr.map(rowHtml).join(''):`<tr><td colspan="16" class="empty">${t('noData')}</td></tr>`}</tbody></table></div>`;
     $('addTickerBtn').onclick=openModal; $('exportBtn').onclick=exportCSV;
     $('searchBox').oninput=e=>{search=e.target.value;renderWatchlistOnly()};
     $('themeFilter').onchange=e=>{activeTheme=e.target.value;renderWatchlistOnly()};
-    $('actionFilter').onchange=e=>{activeAction=e.target.value;renderWatchlistOnly()};
-    $('riskFilter').onchange=e=>{activeRisk=e.target.value;renderWatchlistOnly()};
     $('sortSelect').value=sort; $('sortSelect').onchange=e=>{sort=e.target.value;renderWatchlistOnly()};
     $('resetFilters').onclick=()=>{activeTheme='All';activeAction='All';activeRisk='All';quickFilter='All';search='';sort='default';renderWatchlistOnly()};
     document.querySelectorAll('[data-chip]').forEach(el=>el.onclick=()=>{quickFilter=el.dataset.chip;renderWatchlistOnly();});
     document.querySelectorAll('[data-sortkey]').forEach(el=>el.onclick=()=>{const key=el.dataset.sortkey; const ps=parseSort(); let dir='desc'; if(ps.key===key&&ps.dir==='desc') dir='asc'; sort=key+'_'+dir; renderWatchlistOnly();});
     bindRowActions();
-    document.querySelectorAll('[data-priority]').forEach(el=>el.onchange=()=>{const w=state.watchlist.find(x=>x.symbol===el.dataset.priority); if(w){w.priority=el.value; saveState(); renderWatchlistOnly();}});
+    document.querySelectorAll('[data-priority-set]').forEach(el=>el.onclick=()=>{
+      const w=state.watchlist.find(x=>x.symbol===el.dataset.prioritySet);
+      if(w){w.priority=el.dataset.priorityValue; saveState(); renderWatchlistOnly();}
+    });
     updateMarketClocks();
   }
   function renderWatchlistOnly(){ if(activePage==='watchlist') render(); }
+  function priorityButtonsHtml(s,compact=false){
+    const p=s.priority||'Watch';
+    const opts=[['Core',t('core'),'core'],['Watch',t('watch'),'watch'],['Speculative',t('speculative'),'speculative']];
+    return `<div class="priority-toggle" role="group" aria-label="${t('priority')}" title="${t('focusHelp')}"><span class="priority-toggle-label">${t('priority')}</span>${opts.map(([v,l,c])=>`<button type="button" class="priority-btn ${c} ${p===v?'active':''}" data-priority-set="${s.symbol}" data-priority-value="${v}">${l}</button>`).join('')}</div>${compact?'':`<div class="priority-help">${t('focusHelp')}</div>`}`;
+  }
   function ipadCardHtml(s){
     const err=s.error?`<div class="muted" style="font-size:12px;line-height:1.35">${escapeHtml(s.error)}</div>`:'';
     const chartState=s.chartStatus==='loading'?`<span class="badge amber">Chart loading</span>`:s.chartError?`<span class="badge red">No chart</span>`:(s.candles&&s.candles.length?`<span class="badge green">Trend loaded</span>`:`<span class="badge amber">Trend pending</span>`);
@@ -582,7 +738,8 @@
         <div><div class="stock-card-symbol" data-view="${s.symbol}">${s.symbol}</div><div class="stock-card-company">${escapeHtml(s.name||'—')}</div></div>
         <div><div class="stock-card-price">${money(s.c)}</div><div class="${s.dp>0?'pos':s.dp<0?'neg':'muted'}" style="text-align:right;font-weight:900">${pct(s.dp)} · ${money(s.d)}</div></div>
       </div>
-      <div class="row" style="justify-content:space-between"><span class="badge stock-card-theme">${escapeHtml(s.theme||'Other')}</span>${priorityBadge(s)}${statusBadge(s)}</div>
+      <div class="row" style="justify-content:space-between"><span class="badge stock-card-theme">${escapeHtml(s.theme||'Other')}</span>${statusBadge(s)}</div>
+      ${priorityButtonsHtml(s)}
       ${err}${warningHtml(s)}
       <div class="stock-card-metrics">
         <div class="stock-card-metric"><div class="metric-label">${t('fiveD')}</div><b class="${s.perf5>0?'pos':s.perf5<0?'neg':'muted'}">${pct(s.perf5)}</b></div>
@@ -599,7 +756,7 @@
   }
   function rowHtml(s){
     const err=s.error?`<div class="muted" style="max-width:180px;white-space:normal">${escapeHtml(s.error)}</div>`:'';
-    return `<tr><td>${statusBadge(s)}${err}</td><td><span class="ticker" data-view="${s.symbol}">${s.symbol}</span></td><td>${escapeHtml(s.name||'—')}</td><td><span class="badge">${escapeHtml(s.theme||'Other')}</span></td><td><select class="priority-select" data-priority="${s.symbol}"><option value="Core" ${s.priority==='Core'?'selected':''}>${t('core')}</option><option value="Watch" ${(!s.priority||s.priority==='Watch')?'selected':''}>${t('watch')}</option><option value="Speculative" ${s.priority==='Speculative'?'selected':''}>${t('speculative')}</option></select></td><td class="num">${money(s.c)}</td><td class="num ${s.dp>0?'pos':s.dp<0?'neg':''}">${pct(s.dp)}</td><td class="num ${s.perf5>0?'pos':s.perf5<0?'neg':''}">${pct(s.perf5)}</td><td class="num ${s.perf30>0?'pos':s.perf30<0?'neg':''}">${pct(s.perf30)}</td><td class="num ${s.perf90>0?'pos':s.perf90<0?'neg':''}">${pct(s.perf90)}</td><td class="num">${scoreBadge(s.trendScore)}</td><td class="num">${scoreBadge(s.stabilityScore)}</td><td class="num">${scoreBadge(s.entryRisk,'risk')}</td><td>${s.actionTag?`<span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag)}</span>`:'—'}${warningHtml(s)}</td><td>${chartBadge(s)}<div class="muted" style="max-width:240px;white-space:normal;margin-top:4px">${s.status==='live'?escapeHtml(s.source||'Finnhub API'):'—'}${s.chartError?' · '+escapeHtml(s.chartError):''}</div></td><td><button class="btn small" data-view="${s.symbol}">${t('view')}</button> <button class="btn small danger" data-remove="${s.symbol}">${t('remove')}</button></td></tr>`;
+    return `<tr><td>${statusBadge(s)}${err}</td><td><span class="ticker" data-view="${s.symbol}">${s.symbol}</span></td><td>${escapeHtml(s.name||'—')}</td><td><span class="badge">${escapeHtml(s.theme||'Other')}</span></td><td>${priorityButtonsHtml(s,true)}</td><td class="num">${money(s.c)}</td><td class="num ${s.dp>0?'pos':s.dp<0?'neg':''}">${pct(s.dp)}</td><td class="num ${s.perf5>0?'pos':s.perf5<0?'neg':''}">${pct(s.perf5)}</td><td class="num ${s.perf30>0?'pos':s.perf30<0?'neg':''}">${pct(s.perf30)}</td><td class="num ${s.perf90>0?'pos':s.perf90<0?'neg':''}">${pct(s.perf90)}</td><td class="num">${scoreBadge(s.trendScore)}</td><td class="num">${scoreBadge(s.stabilityScore)}</td><td class="num">${scoreBadge(s.entryRisk,'risk')}</td><td>${s.actionTag?`<span class="badge ${s.entryRisk>=75?'red':s.trendScore>=70?'green':'amber'}">${escapeHtml(s.actionTag)}</span>`:'—'}${tableWarningHtml(s)}</td><td>${chartBadge(s)}<div class="muted" style="max-width:240px;white-space:normal;margin-top:4px">${s.status==='live'?escapeHtml(s.source||'Finnhub API'):'—'}${s.chartError?' · '+escapeHtml(s.chartError):''}</div></td><td><button class="btn small" data-view="${s.symbol}">${t('view')}</button> <button class="btn small danger" data-remove="${s.symbol}">${t('remove')}</button></td></tr>`;
   }
   function bindRowActions(){
     document.querySelectorAll('[data-view]').forEach(el=>el.onclick=()=>{activeSymbol=el.dataset.view;activePage='detail';render();});
@@ -651,7 +808,21 @@
       <button class="btn primary" id="settingsSave">${t('saveKey')}</button></div><div style="margin-top:16px">${renderStatusStrip()}</div>${errors.length?`<div class="card" style="margin-top:16px"><h3>${t('errors')}</h3><ul class="error-list">${errors.map(e=>`<li><b>${e.symbol}</b>: ${escapeHtml(e.error||e.chartError||'Unknown error')}</li>`).join('')}</ul></div>`:''}`;
     $('settingsSave').onclick=()=>{localStorage.setItem(KEY_STORAGE,$('settingsKey').value.trim());localStorage.setItem(CHART_KEY_STORAGE,$('settingsChartKey').value.trim());$('apiKey').value=$('settingsKey').value.trim(); if($('chartApiKey')) $('chartApiKey').value=$('settingsChartKey').value.trim(); render();};
   }
-  function render(){setTopTexts();renderNotice();renderTabs(); if(activePage==='detail')renderDetail(); else if(activePage==='ranking')renderRanking(); else if(activePage==='weekly')renderWeekly(); else if(activePage==='settings')renderSettings(); else renderWatchlist();}
+  function updateStickyTableHeader(){
+    const panel=document.querySelector('.filter-panel');
+    const wrap=document.querySelector('.desktop-table-wrap');
+    if(!panel||!wrap) return;
+    const rect=panel.getBoundingClientRect();
+    const panelBottom=Math.max(0, Math.ceil(rect.bottom));
+    // Table is now its own scroll area. This keeps the visible table height
+    // calculated from the bottom of the sticky filter panel. The table header
+    // itself stays sticky at top:0 inside the table panel, so it cannot float
+    // into the data rows or disappear above the panel.
+    document.documentElement.style.setProperty('--stock-table-panel-top', (panelBottom + 24) + 'px');
+  }
+  function render(){setTopTexts();renderNotice();renderTabs(); if(activePage==='detail')renderDetail(); else if(activePage==='ranking')renderRanking(); else if(activePage==='weekly')renderWeekly(); else if(activePage==='settings')renderSettings(); else renderWatchlist(); requestAnimationFrame(updateStickyTableHeader);}
+  window.addEventListener('scroll',updateStickyTableHeader,{passive:true});
+  window.addEventListener('resize',updateStickyTableHeader);
 
   async function refreshLiveData(){
     if(isRefreshing) return;
@@ -828,10 +999,13 @@
 
   $('apiKey').value=currentKey(); if($('chartApiKey')) $('chartApiKey').value=currentChartKey(); $('saveKeyBtn').onclick=()=>{localStorage.setItem(KEY_STORAGE,$('apiKey').value.trim()); if($('chartApiKey')) localStorage.setItem(CHART_KEY_STORAGE,$('chartApiKey').value.trim()); render(); if(state.autoRefresh && currentKey() && !isRefreshing) refreshLiveData();}; $('refreshBtn').onclick=refreshLiveData; if($('refreshChartsBtn')) $('refreshChartsBtn').onclick=()=>refreshChartData(); $('autoRefreshBtn').onclick=toggleAutoRefresh; $('langBtn').onclick=()=>{state.lang=state.lang==='en'?'zh':'en';saveState();render();};
   $('closeModal').onclick=closeModal; $('cancelModal').onclick=closeModal; $('addTickerConfirm').onclick=addTicker; $('newSymbol').addEventListener('keydown',e=>{if(e.key==='Enter')addTicker();}); $('tickerModal').addEventListener('click',e=>{if(e.target.id==='tickerModal')closeModal();});
+  window.addEventListener('scroll', updateStickyTableHeader, {passive:true});
+  window.addEventListener('resize', updateStickyTableHeader);
   startAutoRefresh();
   render();
   setInterval(updateMarketClocks,1000);
   updateMarketClocks();
+  requestAnimationFrame(updateStickyTableHeader);
 })();
 </script>
 </body>
